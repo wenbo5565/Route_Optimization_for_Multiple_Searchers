@@ -26,7 +26,10 @@ I = list(range(0, J * ending_time + 1))
 
 """ Import data
 """
-zeta_raw = pd.read_csv(r'C:\Users\Wenbo Ma\Desktop\Route Optimization\Python\SP1-L\Zeta.csv', header = None, index_col = 0)
+data_folder = os.path.dirname(os.path.realpath(__file__))
+
+# zeta_raw = pd.read_csv(r'C:\Users\Wenbo Ma\Desktop\Route Optimization\Python\SP1-L\Zeta.csv', header = None, index_col = 0)
+zeta_raw = pd.read_csv(data_folder + '\Zeta.csv', header = None, index_col = 0)
 Zeta = {}
 for path in range(1, zeta_raw.shape[0] + 1):
     for t in range(1, ending_time + 1):
