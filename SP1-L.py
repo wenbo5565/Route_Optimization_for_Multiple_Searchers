@@ -9,8 +9,8 @@ from gurobipy import GRB
 import os
 
 grid_size = 9
-ending_time = 15
-num_scenario = 1000
+ending_time = 7
+num_scenario = 100
 
 """
 Creating set
