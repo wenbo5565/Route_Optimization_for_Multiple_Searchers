@@ -9,7 +9,7 @@ from gurobipy import GRB
 import os
 
 grid_size = 9
-ending_time = 7
+ending_time = 9
 num_scenario = 1000
 
 """
@@ -21,7 +21,7 @@ C = [(i, j) for i in range(1, grid_size + 1) for j in range(1, grid_size + 1)]
 T = list(range(1, ending_time + 1))
 T0 = [0] + T
 Omega = list(range(1, num_scenario + 1))
-J = 3
+J = 15
 I = list(range(0, J * ending_time + 1))
 
 """ Import data
@@ -45,9 +45,9 @@ for path in range(1, zeta_raw.shape[0] + 1):
 model_name = 'sp1_l'
 m = gp.Model(model_name)
 m.setParam(GRB.Param.TimeLimit, 15 * 60)
-m.setParam(GRB.Param.Threads, 4)
+m.setParam(GRB.Param.Threads, 1)
 m.setParam(GRB.Param.LogFile, model_name)
-
+# m.setParam(GRB.Param.NumericFocus,1)
 
 
 """
@@ -113,8 +113,8 @@ def is_reverse_cell(c, c_last):
     else:
         return False
     
-
-m.addConstrs((np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[c, t, omega] * Z[c, t] for c in C for t in T) <= U[omega] for omega in Omega for i in I), name = '19') #2d
+coef_scale = 1
+m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[c, t, omega] * Z[c, t] for c in C for t in T) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
 m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t - 1] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
 m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == J for c in C), name = '15') #2d
 m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == Z[c, t] for c in C for t in T), name = '16') #2d
