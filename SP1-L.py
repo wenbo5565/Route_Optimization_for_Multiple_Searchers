@@ -10,7 +10,7 @@ import os
 
 grid_size = 9
 ending_time = 7
-num_scenario = 100
+num_scenario = 1000
 
 """
 Creating set
