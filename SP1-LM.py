@@ -223,7 +223,7 @@ Defining constraints
 # =============================================================================
     
 m.addConstrs((Q[c, t, j] <= q[c, t] * (1 - np.exp(-j * alpha[c, t])) * V[c, t, j] for c in C for t in T for j in J_set), name = '23')
-m.addConstrs((Q[c, t, j] <= 1 - np.exp(-j * alpha[c, t]) * P[c, t] for c in C for t in T for j in J_set), name = '24')
+m.addConstrs((Q[c, t, j] <= (1 - np.exp(-j * alpha[c, t])) * P[c, t] for c in C for t in T for j in J_set), name = '24')
 m.addConstrs((P[c, t + 1] == sum(gamma[c_prime, c, t] * W[c_prime, t] for c_prime in C) for c in C for t in T[:-1]), name = '25')
 m.addConstrs((W[c, t] <= P[c, t] for c in C for t in T), name = '26')
 m.addConstrs((W[c, t] <= np.exp(-j * alpha[c, t]) * P[c, t] + q[c, t] * (1 - np.exp(-j * alpha[c, t])) * (1 - V[c, t, j]) for c in C for t in T for j in J_set), name = '27')
