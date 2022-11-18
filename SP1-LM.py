@@ -63,8 +63,8 @@ def is_side_cell(c, grid_size):
 
 """ Import data
 """
-data_folder = os.path.dirname(os.path.realpath(__file__))
-# data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
+# data_folder = os.path.dirname(os.path.realpath(__file__))
+data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
 
 zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
 q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
@@ -74,7 +74,7 @@ q = {}
 for sub in sub_q:
     c_two_dim, t = sub
     c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
-    q[c_one_dim, t] = q_raw.loc[c_one_dim, t]
+    q[c_two_dim, t] = q_raw.loc[c_one_dim, t]
 # zeta_raw = pd.read_csv(data_folder + '\Zeta.csv', header = None, index_col = 0)
 
 Zeta = {}
