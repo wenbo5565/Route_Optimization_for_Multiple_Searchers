@@ -7,6 +7,7 @@ from itertools import product
 import gurobipy as gp
 from gurobipy import GRB
 import os
+import platform
 
 grid_size = 9
 ending_time = 7
@@ -65,8 +66,12 @@ def is_side_cell(c, grid_size):
 
 """ Import data
 """
-# data_folder = os.path.dirname(os.path.realpath(__file__))
-data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
+if platform.system() == 'Windows':
+    data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
+else:
+    data_folder = os.path.dirname(os.path.realpath(__file__))
+
+
 
 zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
 q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
