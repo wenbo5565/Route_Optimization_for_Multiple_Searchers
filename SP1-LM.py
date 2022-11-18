@@ -213,7 +213,7 @@ m.addConstrs((W[c, t] <= np.exp(-j * alpha[c, t]) * P[c, t] + q[c, t] * (1 - np.
 m.addConstrs((P[c, 1] == p[c] for c in C), name = '28')
 m.addConstrs((P[c, t] <= q[c, t] for c in C for t in T), name = '29')
 m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(j * V[c, t, j] for j in J_set) for c in C for t in T), name = '30')
-m.addConstrs((sum(V[c, t, j]) <= 1 for j in J_set  for c in C for t in T), name = '31')
+m.addConstrs((sum(V[c, t, j] for j in J_set) <= 1 for c in C for t in T), name = '31')
 
 
 m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t - 1] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
