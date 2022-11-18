@@ -21,7 +21,7 @@ C = [(i, j) for i in range(1, grid_size + 1) for j in range(1, grid_size + 1)]
 T = list(range(1, ending_time + 1))
 T0 = [0] + T
 Omega = list(range(1, num_scenario + 1))
-J = 15
+J = 3
 J_set = list(range(1, J + 1))
 I = list(range(0, J * ending_time + 1))
 
@@ -53,18 +53,20 @@ def is_corner_cell(c, grid_size):
         return False
 
 def is_side_cell(c, grid_size):
-    if c[0] == 1 and c[1] not in [1, grid_size]:
-        return True
-    elif c[1] == grid_size and c[1] not in [1, grid_size]:
-        return True
+    if c[0] == 1 or c[0] == grid_size:
+        if c[1] not in [1, grid_size]:
+            return True
+    elif c[1] == 1 or c[1] == grid_size:
+        if c[0] not in [1, grid_size]:
+            return True
     else:
         return False
 
 
 """ Import data
 """
-data_folder = os.path.dirname(os.path.realpath(__file__))
-# data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
+# data_folder = os.path.dirname(os.path.realpath(__file__))
+data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
 
 zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
 q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
@@ -174,7 +176,7 @@ sub_ctj = list(product(C, T, J_set))
 X = m.addVars(sub_X, lb = 0, name = 'X')
 # Z = m.addVars(sub_ct, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
 # U = m.addVars(Omega, lb = 0, name = 'U')
-P = m.addVars(sub_ct, lb = 0, ub = 1, name = 'P')
+P = m.addVars(sub_ct, lb = 0, name = 'P')
 Q = m.addVars(sub_ctj, lb = 0, name = 'Q')
 V = m.addVars(sub_ctj, vtype = GRB.BINARY, name = 'V')
 W = m.addVars(sub_ct, lb = 0, name = 'W')
