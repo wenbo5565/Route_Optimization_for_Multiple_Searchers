@@ -233,7 +233,7 @@ m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_p
 m.addConstrs((sum(V[c, t, j] for j in J_set) <= 1 for c in C for t in T), name = '31')
 
 
-m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t - 1] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
+m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
 m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c] for c in C), name = '15') #2d
 
 """ Solving
