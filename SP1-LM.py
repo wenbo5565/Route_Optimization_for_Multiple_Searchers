@@ -69,6 +69,12 @@ data_folder = os.path.dirname(os.path.realpath(__file__))
 zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
 q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
 q_raw.columns = [int(col) for col in q_raw.columns]
+sub_q = list(product(C, T))
+q = {}
+for sub in sub_q:
+    c_two_dim, t = sub
+    c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
+    q[c_one_dim, t] = q_raw.loc[c_one_dim, t]
 # zeta_raw = pd.read_csv(data_folder + '\Zeta.csv', header = None, index_col = 0)
 
 Zeta = {}
@@ -101,7 +107,7 @@ Creating parameters
 # q = q / sum(q) # normalize to a probablity distribution summing up to 1
 # q = dict(zip(Omega, q))
 # =============================================================================
-q = q_raw.copy()
+
 
 p = {}
 for c in C:
