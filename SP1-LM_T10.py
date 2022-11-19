@@ -164,7 +164,7 @@ for grid_size in grid_size_grid:
             q[c_two_dim, t] = p[c_two_dim]
         else:
             # c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
-            q[c_two_dim, t] = sum([q[c_prime, t - 1] * gamma[c_prime, c_two_dim, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)])
+            q[c_two_dim, t] = sum([q[c_prime, t - 1] * gamma[c_prime, c_two_dim, t - 1] for c_prime in C if is_nearby_cell(c_two_dim, c_prime)])
     # =============================================================================
     # xx = {} 
     # for c in C:
