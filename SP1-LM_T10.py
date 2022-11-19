@@ -159,7 +159,7 @@ for grid_size in grid_size_grid:
     q = {} # create param values for q
     for sub in sub_q:
         c_two_dim, t = sub
-        print(sub)
+        # print(sub)
         if t == 1:
             q[c_two_dim, t] = p[c_two_dim]
         else:
