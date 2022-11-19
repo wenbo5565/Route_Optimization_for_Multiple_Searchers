@@ -13,6 +13,8 @@ grid_size_grid = [5, 7, 9 , 11, 13, 15]
 num_scenario = 1000
 # J_grid = [1, 2, 3, 4, 5, 10, 15]
 
+# grid_size = 9
+
 for grid_size in grid_size_grid:
     ending_time = 10
     print('=============================')
@@ -78,26 +80,21 @@ for grid_size in grid_size_grid:
     
     
     
-    zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
-    q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
-    q_raw.columns = [int(col) for col in q_raw.columns]
-    sub_q = list(product(C, T))
-    q = {}
-    for sub in sub_q:
-        c_two_dim, t = sub
-        c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
-        q[c_two_dim, t] = q_raw.loc[c_one_dim, t]
+    # zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
+
     # zeta_raw = pd.read_csv(data_folder + '\Zeta.csv', header = None, index_col = 0)
     
-    Zeta = {}
-    for path in range(1, zeta_raw.shape[0] + 1):
-        for t in range(1, ending_time + 1):
-            all_cells = C
-            for cell in all_cells:
-                Zeta[(cell, t, path)] = 0 # set Zeta equal to 0
-            cell_one_dim = zeta_raw.loc[path, 3 * (t - 1) + 1] # extract the occupied cell loc from Zeyu's path
-            cell_two_dim = (cell_one_dim // grid_size + 1, np.mod(cell_one_dim, grid_size))
-            Zeta[(cell_two_dim, t, path)] = 1 # set Zeta equal to 1 for occupied cell
+# =============================================================================
+#     Zeta = {}
+#     for path in range(1, zeta_raw.shape[0] + 1):
+#         for t in range(1, ending_time + 1):
+#             all_cells = C
+#             for cell in all_cells:
+#                 Zeta[(cell, t, path)] = 0 # set Zeta equal to 0
+#             cell_one_dim = zeta_raw.loc[path, 3 * (t - 1) + 1] # extract the occupied cell loc from Zeyu's path
+#             cell_two_dim = (cell_one_dim // grid_size + 1, np.mod(cell_one_dim, grid_size))
+#             Zeta[(cell_two_dim, t, path)] = 1 # set Zeta equal to 1 for occupied cell
+# =============================================================================
     
     """
     """
@@ -155,7 +152,19 @@ for grid_size in grid_size_grid:
             else:
                 gamma[sub] = 0
                 
-    
+    # q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
+    # q_raw.columns = [int(col) for col in q_raw.columns]
+    sub_q = list(product(C, T)) 
+    sub_q = sorted(sub_q, key = lambda x: x[1])
+    q = {} # create param values for q
+    for sub in sub_q:
+        c_two_dim, t = sub
+        print(sub)
+        if t == 1:
+            q[c_two_dim, t] = p[c_two_dim]
+        else:
+            # c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
+            q[c_two_dim, t] = sum([q[c_prime, t - 1] * gamma[c_prime, c_two_dim, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)])
     # =============================================================================
     # xx = {} 
     # for c in C:
