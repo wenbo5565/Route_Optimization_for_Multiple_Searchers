@@ -135,6 +135,7 @@ for ending_time in ending_time_grid:
     """
     Creating parameters
     """
+    # np.random.seed(2022)
     q = np.random.uniform(low = 0, high = 1, size = num_scenario)
     q = q / sum(q) # normalize to a probablity distribution summing up to 1
     q = dict(zip(Omega, q))
