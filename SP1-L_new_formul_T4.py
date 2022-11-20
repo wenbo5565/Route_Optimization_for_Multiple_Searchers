@@ -9,7 +9,7 @@ from gurobipy import GRB
 import os
 import platform
 
-grid_size_grid = [5, 7, 9, 11, 13, 15]
+grid_size_grid = [9, 11, 13, 15]
 
 for grid_size in grid_size_grid:
     print('===========================')
@@ -70,7 +70,7 @@ for grid_size in grid_size_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = 15
+    J = 3
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     
