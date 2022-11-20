@@ -13,7 +13,7 @@ grid_size_grid = [5, 7, 9, 11, 13, 15]
 
 for grid_size in grid_size_grid:
     print('===========================')
-    print('ending time is', ending_time)
+    print('grid size', grid_size)
     print('===========================')
 
     grid_size = grid_size
