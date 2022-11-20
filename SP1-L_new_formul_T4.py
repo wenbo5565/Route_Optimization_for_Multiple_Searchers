@@ -7,17 +7,17 @@ from itertools import product
 import gurobipy as gp
 from gurobipy import GRB
 import os
+import platform
 
+grid_size_grid = [5, 7, 9, 11, 13, 15]
 
-J_grid = [1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 50]
-
-for J in J_grid:
+for grid_size in grid_size_grid:
     print('===========================')
-    print('number of searchers', J)
+    print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 9
-    ending_time = 15
+    grid_size = grid_size
+    ending_time = 10
     num_scenario = 1000
     
     """
@@ -70,7 +70,7 @@ for J in J_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = J
+    J = 3
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     
@@ -85,8 +85,10 @@ for J in J_grid:
 
     """ Import data
     """
-    data_folder = os.path.dirname(os.path.realpath(__file__))
-    # data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
+    if platform.system() == 'Windows':
+        data_folder = 'E:\\Research\\Route_Optimization_for_Multiple_Searchers\\Python\\'
+    else:
+        data_folder = os.path.dirname(os.path.realpath(__file__))
     
     # zeta_raw = pd.read_csv(r'C:\Users\Wenbo Ma\Desktop\Route Optimization\Python\SP1-L\Zeta.csv', header = None, index_col = 0)
     zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
@@ -101,7 +103,13 @@ for J in J_grid:
             cell_two_dim = (cell_one_dim // grid_size + 1, np.mod(cell_one_dim, grid_size))
             Zeta[(cell_two_dim, t, path)] = 1 # set Zeta equal to 1 for occupied cell
     
-    
+    W = {}
+    for c in C:
+        for t in T:
+            if sum(Zeta[c, t, omega] for omega in Omega) >= 1:
+                W[c, t] = 1
+            else:
+                W[c, t] = 0
     # =============================================================================
     # Zeta = {}
     # for path in range(1, zeta_raw.shape[0] + 1):
@@ -116,7 +124,7 @@ for J in J_grid:
     # =============================================================================
     """
     """
-    model_name = 'sp1_l'
+    model_name = 'sp1_l_new_formul'
     m = gp.Model(model_name)
     m.setParam(GRB.Param.TimeLimit, 15 * 60)
     m.setParam(GRB.Param.Threads, 1)
@@ -143,9 +151,12 @@ for J in J_grid:
     """
     sub_X = list(product(C, C, T0))
     sub_Z = list(product(C, T))
+    sub_WW = list(product(C, T))
+    sub_WW = [each for each in sub_WW if W[each] == 1]
     
     X = m.addVars(sub_X, lb = 0, name = 'X')
-    Z = m.addVars(sub_Z, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
+    # Z = m.addVars(sub_Z, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
+    Z_New = m.addVars(sub_WW, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     U = m.addVars(Omega, lb = 0, name = 'U')
     
     """
@@ -193,11 +204,15 @@ for J in J_grid:
             return False
         
     coef_scale = 1
-    m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[c, t, omega] * Z[c, t] for c in C for t in T) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
+    # m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[c, t, omega] * Z[c, t] for c in C for t in T) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
+    m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Z_New[sub] for sub in sub_WW if Zeta[sub[0], sub[1], omega] == 1) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
+    
     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
-    # m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == J for c in C), name = '15') #2d
     m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c, 0] for c in C), name = '15') #2d
-    m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == Z[c, t] for c in C for t in T), name = '16') #2d
+    
+    # m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == Z[c, t] for c in C for t in T), name = '16') #2d
+    m.addConstrs((sum(X[c_prime, sub[0], sub[1] - 1] for c_prime in C if is_nearby_cell(sub[0], c_prime)) == Z_New[sub] for sub in sub_WW), name = '16') #2d
+    
     
     """ Solving
     """
@@ -213,6 +228,4 @@ for J in J_grid:
 #         if value.X != 0:
 #             print(key, value.X)
 # =============================================================================
-
-
 

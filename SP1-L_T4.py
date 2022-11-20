@@ -13,7 +13,7 @@ grid_size_grid = [5, 7, 9, 11, 13, 15]
 
 for grid_size in grid_size_grid:
     print('===========================')
-    print('ending time is', grid_size)
+    print('grid size', grid_size)
     print('===========================')
 
     grid_size = grid_size
@@ -127,6 +127,7 @@ for grid_size in grid_size_grid:
     """
     Creating parameters
     """
+    np.random.seed(2022)
     q = np.random.uniform(low = 0, high = 1, size = num_scenario)
     q = q / sum(q) # normalize to a probablity distribution summing up to 1
     q = dict(zip(Omega, q))
