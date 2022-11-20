@@ -9,7 +9,7 @@ from gurobipy import GRB
 import os
 import platform
 
-grid_size_grid = [9, 11, 13, 15]
+grid_size_grid = [5, 7, 9, 11, 13, 15]
 
 for grid_size in grid_size_grid:
     print('===========================')
