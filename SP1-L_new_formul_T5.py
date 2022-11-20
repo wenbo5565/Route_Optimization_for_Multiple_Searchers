@@ -16,7 +16,7 @@ for J in J_grid:
     print('number of searchers', J)
     print('===========================')
 
-    grid_size = grid_size
+    grid_size = 9
     ending_time = 10
     num_scenario = 1000
     
