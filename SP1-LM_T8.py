@@ -107,7 +107,7 @@ for ending_time in ending_time_grid:
     m.setParam(GRB.Param.TimeLimit, 15 * 60)
     m.setParam(GRB.Param.Threads, 1)
     m.setParam(GRB.Param.LogFile, model_name)
-    
+    m.setParam(GRB.Param.MIPGap, 1e-5)
     
     
     """
