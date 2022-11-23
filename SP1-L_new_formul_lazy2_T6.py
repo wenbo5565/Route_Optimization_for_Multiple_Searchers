@@ -10,7 +10,7 @@ import os
 import platform
 import math
 
-J_grid = [4, 6, 8, 10, 15, 20, 30, 50]
+J_grid = [4, 5, 6, 8, 10, 15, 20, 30, 50]
 
 for J in J_grid:
     print('===========================')
