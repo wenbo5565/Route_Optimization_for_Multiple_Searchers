@@ -28,7 +28,7 @@ for ending_time in ending_time_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = 3
+    J = 15
     J_set = list(range(1, J + 1))
     I = list(range(0, J * ending_time + 1))
     
@@ -252,7 +252,7 @@ for ending_time in ending_time_grid:
     
     m.addConstrs((P[c, 1] == p[c] for c in C), name = '28')
     m.addConstrs((P[c, t] <= q[c, t] for c in C for t in T), name = '29')
-    m.addConstrs((sum(X[c_prime, reduce_ct[0], reduce_ct[1] - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(j * V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) for reduce_ct in sub_zset), name = '30')
+    m.addConstrs((sum(X[c_prime, reduce_ct[0], reduce_ct[1] - 1] for c_prime in C if is_nearby_cell(reduce_ct[0], c_prime)) == sum(j * V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) for reduce_ct in sub_zset), name = '30')
     m.addConstrs((sum(V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) <= 1 for reduce_ct in sub_zset), name = '31')
     
     
