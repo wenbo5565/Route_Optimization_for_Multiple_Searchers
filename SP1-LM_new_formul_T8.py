@@ -240,19 +240,19 @@ for ending_time in ending_time_grid:
     # =============================================================================
         
     # m.addConstrs((Q[c, t, j] <= q[c, t] * (1 - np.exp(-j * alpha[c, t])) * V[c, t, j] for c in C for t in T for j in J_set), name = '23')
-    m.addConstrs((Q[reduce_ct[0], reduce_ct[1], j] <= q[reduce_ct[0], reduce_ct[1]] * (1 - np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]])) * V[reduce_ct[0], reduce_ct[1], j] for reduce_ct in sub_zset for j in J_set), name = '23')
+    m.addConstrs((Q[reduce_ct[0], reduce_ct[1], j] <= q[reduce_ct[0], reduce_ct[1]] * (1 - np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]])) * V[(reduce_ct[0], reduce_ct[1]), j] for reduce_ct in sub_zset for j in J_set), name = '23')
 
     
     m.addConstrs((Q[c, t, j] <= (1 - np.exp(-j * alpha[c, t])) * P[c, t] for c in C for t in T for j in J_set), name = '24')
     m.addConstrs((P[c, t + 1] == sum(gamma[c_prime, c, t] * W[c_prime, t] for c_prime in C) for c in C for t in T[:-1]), name = '25')
     m.addConstrs((W[c, t] <= P[c, t] for c in C for t in T), name = '26')
     # m.addConstrs((W[c, t] <= np.exp(-j * alpha[c, t]) * P[c, t] + q[c, t] * (1 - np.exp(-j * alpha[c, t])) * (1 - V[c, t, j]) for c in C for t in T for j in J_set), name = '27')
-    m.addConstrs((W[reduce_ct[0], t] <= np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]]) * P[reduce_ct[0], reduce_ct[1]] + q[reduce_ct[0], reduce_ct[1]] * (1 - np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]])) * (1 - V[reduce_ct[0], reduce_ct[1], j]) for reduce_ct in sub_zset for j in J_set), name = '27')
+    m.addConstrs((W[reduce_ct[0], t] <= np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]]) * P[reduce_ct[0], reduce_ct[1]] + q[reduce_ct[0], reduce_ct[1]] * (1 - np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]])) * (1 - V[(reduce_ct[0], reduce_ct[1]), j]) for reduce_ct in sub_zset for j in J_set), name = '27')
     
     m.addConstrs((P[c, 1] == p[c] for c in C), name = '28')
     m.addConstrs((P[c, t] <= q[c, t] for c in C for t in T), name = '29')
-    m.addConstrs((sum(X[c_prime, reduce_ct[0], reduce_ct[1] - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(j * V[reduce_ct[0], reduce_ct[1], j] for j in J_set) for reduce_ct in sub_zset for t in T), name = '30')
-    m.addConstrs((sum(V[reduce_ct[0], reduce_ct[1], j] for j in J_set) <= 1 for reduce_ct in sub_zset for t in T), name = '31')
+    m.addConstrs((sum(X[c_prime, reduce_ct[0], reduce_ct[1] - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(j * V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) for reduce_ct in sub_zset for t in T), name = '30')
+    m.addConstrs((sum(V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) <= 1 for reduce_ct in sub_zset for t in T), name = '31')
     
     
     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
