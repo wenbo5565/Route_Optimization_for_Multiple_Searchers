@@ -9,7 +9,7 @@ from gurobipy import GRB
 import os
 import platform
 
-grid_size_grid = [7, 9, 11, 13, 15]
+grid_size_grid = [5, 7, 9, 11, 13, 15]
 
 for grid_size in grid_size_grid:
     print('===========================')
@@ -205,7 +205,9 @@ for grid_size in grid_size_grid:
         
     coef_scale = 1
     # m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[c, t, omega] * Z[c, t] for c in C for t in T) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
-    m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Z_New[sub] for sub in sub_WW if Zeta[sub[0], sub[1], omega] == 1) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
+    # m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Z_New[sub] for sub in sub_WW if Zeta[sub[0], sub[1], omega] == 1) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
+    m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[sub[0], sub[1], omega] * Z_New[sub] for sub in sub_WW) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
+
     
     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
     m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c, 0] for c in C), name = '15') #2d
