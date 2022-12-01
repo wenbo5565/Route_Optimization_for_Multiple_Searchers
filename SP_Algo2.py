@@ -48,7 +48,7 @@ def is_side_cell(c, grid_size):
 
 ##################### End of helper function ####################
 
-ending_time_grid = list(range(7, 10))
+ending_time_grid = list(range(7, 16))
 
 """ Import data
 """
@@ -227,8 +227,8 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while Xi_ub - Xi_lb > delta * Xi_lb:
-    
+    while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+        
         ################ step 1 ################
         print('=============', counter, '===============')
         
@@ -363,5 +363,5 @@ for ending_time in ending_time_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[ending_time] = [gap, running_time]
+    time_log[ending_time] = [gap, running_time, Xi_ub]
 print(time_log)
