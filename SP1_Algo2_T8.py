@@ -49,7 +49,7 @@ def is_side_cell(c, grid_size):
 
 ##################### End of helper function ####################
 
-J_grid = [1, 2, 3, 4, 5, 10, 15]
+ending_time_grid = list(range(7, 16))
 
 """ Import data
 """
@@ -61,13 +61,13 @@ zeta_raw = pd.read_csv(data_folder + '/Zeta.csv', header = None, index_col = 0)
 q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
 
 time_log = {}
-for J in J_grid:
+for ending_time in ending_time_grid:
     print('===========================')
-    print('J is', J)
+    print('ending time is', ending_time)
     print('===========================')
 
     grid_size = 9
-    ending_time = 10
+    ending_time = ending_time
     num_scenario = 1000
     
     """
@@ -77,7 +77,7 @@ for J in J_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = J
+    J = 3
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     
@@ -364,7 +364,7 @@ for J in J_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[J] = [gap, running_time, Xi_ub]
+    time_log[ending_time] = [gap, running_time, Xi_ub]
 print(time_log)
-with open('time_log_T9.txt', 'w') as log_result:
+with open('time_log_T8.txt', 'w') as log_result:
     log_result.write(json.dumps(time_log))

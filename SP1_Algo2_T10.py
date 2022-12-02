@@ -9,6 +9,7 @@ from gurobipy import GRB
 import os
 import platform
 import time
+import json
 
 ##################### Helper function ###########################
 def is_nearby_cell(c, c_prime):
@@ -367,5 +368,7 @@ for grid_size in grid_size_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[ending_time] = [gap, running_time, Xi_ub]
+    time_log[grid_size] = [gap, running_time, Xi_ub]
 print(time_log)
+with open('time_log_T10.txt', 'w') as log_result:
+    log_result.write(json.dumps(time_log))
