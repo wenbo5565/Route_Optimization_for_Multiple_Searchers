@@ -275,7 +275,7 @@ for grid_size in grid_size_grid:
         # def solve_p():
 
         
-        g = (Xi_ub - Xi_lb) / float(Xi_lb)
+        g = (Xi_ub - Xi_lb) / Xi_lb if Xi_lb != 0 else np.inf
         print('counter is', counter)
         print('g is', g)
         
