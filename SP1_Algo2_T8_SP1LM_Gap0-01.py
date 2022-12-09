@@ -83,7 +83,7 @@ for ending_time in ending_time_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = 3
+    J = 15
     J_set = list(range(1, J + 1))
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
@@ -192,6 +192,12 @@ for ending_time in ending_time_grid:
     X_init = {}
     for sub, var in X.items():
         X_init[sub] = var.X
+    
+# =============================================================================
+#     Z_init = {}
+#     for sub, var in Z.items():
+#         Z_init[sub] = var.X
+# =============================================================================
     
     #######################################
     ######  End SP1-LM for 5 seconds
