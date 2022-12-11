@@ -83,7 +83,7 @@ for ending_time in ending_time_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = 15
+    J = 3
     J_set = list(range(1, J + 1))
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
@@ -193,6 +193,8 @@ for ending_time in ending_time_grid:
     for sub, var in X.items():
         X_init[sub] = var.X
     
+    sp1_lm_ub = m.objVal
+    sp1_lm_lb = m.poolObjBound
 # =============================================================================
 #     Z_init = {}
 #     for sub, var in Z.items():
@@ -226,8 +228,8 @@ for ending_time in ending_time_grid:
     for sub in sub_Z:
         Z_param[sub] = 0
     
-    Xi_lb = 0
-    Xi_ub = 1
+    Xi_lb = sp1_lm_lb
+    Xi_ub = sp1_lm_ub
     counter = 1
     
     cuts = []
@@ -246,7 +248,8 @@ for ending_time in ending_time_grid:
     # m.update()
     
     for sub, init_var in X_init.items():
-        X[sub].Start = init_var
+        X[sub].ub = init_var
+        X[sub].lb = init_var
 
     """
     Defining objective function
