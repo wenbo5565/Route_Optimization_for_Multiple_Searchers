@@ -265,7 +265,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+    while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
         
         ################ step 1 ################
         print('=============', counter, '===============')
@@ -296,7 +296,7 @@ for ending_time in ending_time_grid:
         
         if f_Z < Xi_ub:
             Xi_ub = f_Z   
-        if Xi_ub - Xi_lb <= delta * Xi_lb:
+        if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
             break
         
         print('Before optimization')
@@ -308,7 +308,7 @@ for ending_time in ending_time_grid:
         # def solve_p():
 
         
-        g = (Xi_ub - Xi_lb) / Xi_lb
+        g = abs(Xi_ub - Xi_lb) / Xi_lb
         print('counter is', counter)
         print('g is', g)
         
@@ -398,7 +398,7 @@ for ending_time in ending_time_grid:
         #         if value.X != 0:
         #             print(key, value.X)
         # =============================================================================
-    gap = (Xi_ub - Xi_lb) / Xi_lb
+    gap = abs(Xi_ub - Xi_lb) / Xi_lb
     print('Final MIPGap is', gap)
     end_time = time.time()
     running_time = end_time - start_time
