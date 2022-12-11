@@ -270,6 +270,11 @@ for ending_time in ending_time_grid:
         ################ step 1 ################
         print('=============', counter, '===============')
         
+        if counter == 2: # un-fix X after the first iteration
+            for sub, init_var in X_init.items():
+                X[sub].ub = np.inf
+                X[sub].lb = 0
+                        
         r = {}
         for t in T:
             for c in C:
