@@ -53,7 +53,7 @@ def is_side_cell(c, grid_size):
 
 ##################### End of helper function ####################
 
-ending_time_grid = list(range(7, 11))
+ending_time_grid = list(range(13, 16))
 
 """ Import data
 """
