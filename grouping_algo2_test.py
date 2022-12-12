@@ -501,11 +501,15 @@ for ending_time in ending_time_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[ending_time] = [gap, running_time, Xi_ub]
+# =============================================================================
+#     time_log[ending_time] = [gap, running_time, Xi_ub]
+# =============================================================================
     
-print(time_log)
-with open('time_log_T8.txt', 'w') as log_result:
-    log_result.write(json.dumps(time_log))
+# =============================================================================
+# print(time_log)
+# with open('time_log_T8.txt', 'w') as log_result:
+#     log_result.write(json.dumps(time_log))
+# =============================================================================
 with open('ZZZ.txt', 'w') as log_result:
     log_result.write(json.dumps(zzz_val))
 with open('Recov_Z.txt', 'w') as log_result:
