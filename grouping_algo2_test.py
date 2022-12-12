@@ -93,6 +93,7 @@ else:
 time_log = {}
 for ending_time in ending_time_grid:
     # ending_time = ending_
+    ending_time = 5
     print('===========================')
     print('ending time is', ending_time)
     print('===========================')
@@ -424,7 +425,8 @@ for ending_time in ending_time_grid:
         # cuts.append(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi)
         
         # m.addConstr(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi, name = 'cut_' + str(counter))
-        lhs[counter] = m.addConstr(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (ZZZ[cat_group[c, t]] - Z_param[c, t]) for c in C for t in T]) <= Xi, name = 'cut_' + str(counter))
+        lhs[counter] = f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (ZZZ[cat_group[c, t]] - Z_param[c, t]) for c in C for t in T]) 
+        m.addConstr(lhs[counter] <= Xi, name = 'cut_' + str(counter))
 
         
 # =============================================================================
