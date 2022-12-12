@@ -443,10 +443,10 @@ for ending_time in ending_time_grid:
         lhs_val[counter]  = lhs[counter].getValue()
         
         for group in range(1, num_groups + 1):
-            zzz_val[counter][group] = ZZZ[group].X
+            zzz_val[str(counter, group)] = ZZZ[group].X
         
         for key, val in X.items():
-            x_val[counter][str(key)] = val.X
+            x_val[str(counter, key)] = val.X
         
         Xi_iter_lb = m.poolObjBound
         Xi_iter_ub = m.objVal
@@ -468,7 +468,7 @@ for ending_time in ending_time_grid:
             #    subs.append(sub)
             c, t = sub
             Z_param[c, t] = sum(X[c_prime, c, t - 1].X for c_prime in C if is_nearby_cell(c, c_prime))
-        z_recov_val[counter][str(c, t)] = Z_param[c, t]
+        z_recov_val[str(counter, c, t)] = Z_param[c, t]
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
