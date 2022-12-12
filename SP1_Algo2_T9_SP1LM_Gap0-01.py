@@ -408,7 +408,7 @@ for J in J_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[ending_time] = [gap, running_time, Xi_ub]
+    time_log[J] = [gap, running_time, Xi_ub]
 print(time_log)
-with open('time_log_T8.txt', 'w') as log_result:
+with open('time_log_T9.txt', 'w') as log_result:
     log_result.write(json.dumps(time_log))
