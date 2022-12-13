@@ -241,7 +241,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+    while counter <= 5 Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
         
         ################ step 1 ################
         print('=============', counter, '===============')
