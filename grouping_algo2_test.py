@@ -430,9 +430,13 @@ for ending_time in ending_time_grid:
         
         
         
-        for c in C:
-            for t in T:
-                finite_diff_val[str((counter, c, t))] = r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]
+        for t in T:
+            for c in C:
+                coef = r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]
+                if coef != 0:
+                    finite_diff_val[str((counter, c, t))] = r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]
+        
+        # finite_diff_val = dict(sorted(finite_diff_val.items(), key = lambda item: item[1]))
         
         m.addConstr(lhs[counter] <= Xi, name = 'cut_' + str(counter))
 
