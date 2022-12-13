@@ -350,7 +350,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while counter <= 3 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+    while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
         
         ################ step 1 ################
         print('=============', counter, '===============')
@@ -468,7 +468,7 @@ for ending_time in ending_time_grid:
             #    subs.append(sub)
             c, t = sub
             Z_param[c, t] = sum(X[c_prime, c, t - 1].X for c_prime in C if is_nearby_cell(c, c_prime))
-        z_recov_val[str((counter, c, t))] = Z_param[c, t]
+            z_recov_val[str((counter, c, t))] = Z_param[c, t]
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
