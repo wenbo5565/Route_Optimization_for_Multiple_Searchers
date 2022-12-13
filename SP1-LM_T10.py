@@ -10,6 +10,7 @@ import os
 import platform
 
 grid_size_grid = [5, 7, 9 , 11, 13, 15]
+# grid_size_grid = [9]
 num_scenario = 1000
 # J_grid = [1, 2, 3, 4, 5, 10, 15]
 

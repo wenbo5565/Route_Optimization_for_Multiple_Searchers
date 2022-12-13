@@ -9,6 +9,7 @@ from gurobipy import GRB
 import os
 import platform
 import time
+import json
 
 ##################### Helper function ###########################
 def is_nearby_cell(c, c_prime):
@@ -48,7 +49,7 @@ def is_side_cell(c, grid_size):
 
 ##################### End of helper function ####################
 
-ending_time_grid = list(range(7, 16))
+ending_time_grid = list(range(10, 16))
 
 """ Import data
 """
@@ -76,7 +77,7 @@ for ending_time in ending_time_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     Omega = list(range(1, num_scenario + 1))
-    J = 3
+    J = 15
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     
@@ -365,3 +366,5 @@ for ending_time in ending_time_grid:
     print("Running time is", running_time)
     time_log[ending_time] = [gap, running_time, Xi_ub]
 print(time_log)
+with open('time_log.txt', 'w') as log_result:
+    log_result.write(json.dumps(time_log))

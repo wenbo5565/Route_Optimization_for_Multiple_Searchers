@@ -207,11 +207,12 @@ for J in J_grid:
     # m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Zeta[c, t, omega] * Z[c, t] for c in C for t in T) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
     constr_19 = m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Z_New[sub] for sub in sub_WW if Zeta[sub[0], sub[1], omega] == 1) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
     
+    print('turn on lazy constraints')
     for i in I:
-        if i < 45 or i > 65:
-            for omega in Omega:
-                print('setting', omega, i, 'as lazy constraint')
-                constr_19[omega, i].Lazy = 2
+       if i < 45 or i > 65:
+           for omega in Omega:
+               # print('setting', omega, i, 'as lazy constraint')
+               constr_19[omega, i].Lazy = 3
     
     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
     m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c, 0] for c in C), name = '15') #2d
