@@ -347,6 +347,7 @@ for ending_time in ending_time_grid:
     zzz_val = {}
     x_val = {}
     z_recov_val = {}
+    finite_diff_val = {}
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
@@ -426,6 +427,13 @@ for ending_time in ending_time_grid:
         
         # m.addConstr(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi, name = 'cut_' + str(counter))
         lhs[counter] = f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (ZZZ[cat_group[c, t]] - Z_param[c, t]) for c in C for t in T]) 
+        
+        
+        
+        for c in C:
+            for t in T:
+                finite_diff_val[str(counter, c, t)] = r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]
+        
         m.addConstr(lhs[counter] <= Xi, name = 'cut_' + str(counter))
 
         
@@ -520,4 +528,6 @@ for ending_time in ending_time_grid:
         log_result.write(json.dumps(lhs_val))
     with open('X.txt', 'w') as log_result:
         log_result.write(json.dumps(x_val))
+    with open('finite_diff.txt', 'w') as log_result:
+        log_result.write(json.dumps(finite_diff_val))
     
