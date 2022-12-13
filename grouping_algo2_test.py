@@ -520,14 +520,14 @@ for ending_time in ending_time_grid:
 # with open('time_log_T8.txt', 'w') as log_result:
 #     log_result.write(json.dumps(time_log))
 # =============================================================================
-    with open('ZZZ.txt', 'w') as log_result:
+    with open('Grouping_ZZZ.txt', 'w') as log_result:
         log_result.write(json.dumps(zzz_val))
-    with open('Recov_Z.txt', 'w') as log_result:
+    with open('Grouping_Recov_Z.txt', 'w') as log_result:
         log_result.write(json.dumps(z_recov_val))
-    with open('LHS.txt', 'w') as log_result:
+    with open('Grouping_LHS.txt', 'w') as log_result:
         log_result.write(json.dumps(lhs_val))
-    with open('X.txt', 'w') as log_result:
+    with open('Grouping_X.txt', 'w') as log_result:
         log_result.write(json.dumps(x_val))
-    with open('finite_diff.txt', 'w') as log_result:
+    with open('Grouping_finite_diff.txt', 'w') as log_result:
         log_result.write(json.dumps(finite_diff_val))
     
