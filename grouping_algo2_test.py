@@ -98,7 +98,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 6
+    grid_size = 3
     ending_time = ending_time
     num_scenario = 1000
     
@@ -247,7 +247,7 @@ for ending_time in ending_time_grid:
     W_param_excl_0 = [val for val in W_param.values()]
     min_W_param = min(W_param_excl_0)
     cat_group = {}
-    W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups - 1)
+    W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups)
     for c in C:
         for t in T:
             if W_param[c, t] == 0:
