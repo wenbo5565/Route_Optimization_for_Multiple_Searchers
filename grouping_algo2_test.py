@@ -98,7 +98,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 3
+    grid_size = 7
     ending_time = ending_time
     num_scenario = 1000
     
