@@ -303,7 +303,7 @@ for ending_time in ending_time_grid:
     group_cnt = {}
     for group in cat_group.values():
         if group not in group_cnt.keys():
-            group_cnt[group]  = 1
+            group_cnt[group] = 1
         else:
             group_cnt[group] += 1
             
@@ -312,7 +312,9 @@ for ending_time in ending_time_grid:
     ZZZ = {} # dict to save ZZZ variable
     ZZZ_param = {}
     for group in group_cnt.keys():
-        ZZZ[group] = m.addVar(lb = 0, ub = group_cnt[group], vtype = GRB.INTEGER)
+        # ZZZ[group] = m.addVar(lb = 0, ub = group_cnt[group], vtype = GRB.INTEGER)
+        ZZZ[group] = m.addVar(lb = 0, ub = 6, vtype = GRB.INTEGER)
+        ZZZ[group].Start = 0
         ZZZ_param[group] = 0
     
     
@@ -426,8 +428,17 @@ for ending_time in ending_time_grid:
         # cuts.append(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi)
         
         # m.addConstr(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi, name = 'cut_' + str(counter))
-        lhs[counter] = f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (ZZZ[cat_group[c, t]] - Z_param[c, t]) for c in C for t in T]) 
+        finite_diff_coef = {}
+        for t in T:
+            for c in C:
+                group = cat_group[c, t]
+                if group in finite_diff_coef.keys():
+                    finite_diff_coef[group].append(r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t])
+                else:
+                    finite_diff_coef[group] = [r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]]
         
+        lhs[counter] = f_Z + sum([min(finite_diff_coef[group]) * (ZZZ[group] - ZZZ_param[group]) for group in group_cnt.keys()]) 
+        finite_diff_by_k = {group: min(finite_diff_coef[group]) for group in group_cnt.keys()}
         
         
         for t in T:
@@ -453,7 +464,8 @@ for ending_time in ending_time_grid:
         m.optimize()
         
         lhs_val[counter]  = lhs[counter].getValue()
-        
+        print('===== iteration =====', counter, 'lhs after opt is', lhs_val[counter])
+    
         for group in range(1, num_groups + 1):
             zzz_val[str((counter, group))] = ZZZ[group].X
         
@@ -483,6 +495,11 @@ for ending_time in ending_time_grid:
             Z_param[c, t] = sum(X[c_prime, c, t - 1].X for c_prime in C if is_nearby_cell(c, c_prime))
             if Z_param[c, t] != 0:
                 z_recov_val[str((counter, c, t))] = Z_param[c, t]
+                
+        for group in group_cnt.keys():
+            ZZZ_param[group] = ZZZ[group].X
+            print('===== iteration: =====', counter)
+            print('===== ZZZ value is', group, ZZZ[group].X)
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
@@ -534,4 +551,3 @@ for ending_time in ending_time_grid:
         log_result.write(json.dumps(x_val))
     with open('Grouping_finite_diff.txt', 'w') as log_result:
         log_result.write(json.dumps(finite_diff_val))
-    
