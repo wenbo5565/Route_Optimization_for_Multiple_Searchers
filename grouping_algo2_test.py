@@ -486,7 +486,7 @@ for ending_time in ending_time_grid:
         lhs_val[counter]  = lhs[counter].getValue()
         print('===== iteration =====', counter, 'lhs after opt is', lhs_val[counter])
     
-        for group in range(1, num_groups + 1):
+        for group in group_cnt.keys():
             zzz_val[str((counter, group))] = ZZZ[group].X
         
         for key, val in X.items():
