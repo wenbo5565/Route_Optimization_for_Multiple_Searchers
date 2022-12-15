@@ -9,7 +9,7 @@ from gurobipy import GRB
 import os
 import platform
 
-grid_size = 9
+grid_size = 5
 ending_time_grid = range(7, 16)
 ending_time_grid = [9]
 num_scenario = 1000
