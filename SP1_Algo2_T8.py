@@ -50,6 +50,7 @@ def is_side_cell(c, grid_size):
 ##################### End of helper function ####################
 
 ending_time_grid = list(range(7, 16))
+ending_time_grid = [9]
 
 """ Import data
 """
@@ -62,6 +63,7 @@ q_raw = pd.read_csv(data_folder + '/q.csv', header = 0, index_col = 0)
 
 time_log = {}
 for ending_time in ending_time_grid:
+    ending_time = 9
     print('===========================')
     print('ending time is', ending_time)
     print('===========================')
@@ -88,26 +90,30 @@ for ending_time in ending_time_grid:
                 xx[c, t] = J
             else:
                 xx[c, t] = 0
-            
-    q_raw.columns = [int(col) for col in q_raw.columns]
-    sub_q = list(product(C, T))
-    q = {}
-    for sub in sub_q:
-        c_two_dim, t = sub
-        c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
-        q[c_two_dim, t] = q_raw.loc[c_one_dim, t]
+# =============================================================================
+#             
+#     q_raw.columns = [int(col) for col in q_raw.columns]
+#     sub_q = list(product(C, T))
+#     q = {}
+#     for sub in sub_q:
+#         c_two_dim, t = sub
+#         c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
+#         q[c_two_dim, t] = q_raw.loc[c_one_dim, t]
+# =============================================================================
     # zeta_raw = pd.read_csv(data_folder + '\Zeta.csv', header = None, index_col = 0)
     
-    Zeta = {}
-    for path in range(1, zeta_raw.shape[0] + 1):
-        for t in range(1, ending_time + 1):
-            all_cells = C
-            for cell in all_cells:
-                Zeta[(cell, t, path)] = 0 # set Zeta equal to 0
-            cell_one_dim = zeta_raw.loc[path, 3 * (t - 1) + 1] # extract the occupied cell loc from Zeyu's path
-            cell_two_dim = (cell_one_dim // grid_size + 1, np.mod(cell_one_dim, grid_size))
-            Zeta[(cell_two_dim, t, path)] = 1 # set Zeta equal to 1 for occupied celll
-    
+# =============================================================================
+#     Zeta = {}
+#     for path in range(1, zeta_raw.shape[0] + 1):
+#         for t in range(1, ending_time + 1):
+#             all_cells = C
+#             for cell in all_cells:
+#                 Zeta[(cell, t, path)] = 0 # set Zeta equal to 0
+#             cell_one_dim = zeta_raw.loc[path, 3 * (t - 1) + 1] # extract the occupied cell loc from Zeyu's path
+#             cell_two_dim = (cell_one_dim // grid_size + 1, np.mod(cell_one_dim, grid_size))
+#             Zeta[(cell_two_dim, t, path)] = 1 # set Zeta equal to 1 for occupied celll
+#     
+# =============================================================================
 # =============================================================================
 #     W = {}
 #     for c in C:
@@ -128,9 +134,11 @@ for ending_time in ending_time_grid:
         else:
             p[c] = 0
     
-    alpha_sub = list(product(C, T))
-    alpha_value = [-3 * np.log(0.4) / J] * grid_size * grid_size * ending_time
-    alpha = dict(zip(alpha_sub, alpha_value))
+# =============================================================================
+#     alpha_sub = list(product(C, T))
+#     alpha_value = [-3 * np.log(0.4) / J] * grid_size * grid_size * ending_time
+#     alpha = dict(zip(alpha_sub, alpha_value))
+# =============================================================================
     alpha = -3 * np.log(0.4) / J
     
     
