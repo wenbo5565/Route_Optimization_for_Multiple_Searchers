@@ -98,7 +98,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 5
+    grid_size = 9
     ending_time = ending_time
     num_scenario = 1000
     
@@ -221,14 +221,33 @@ for ending_time in ending_time_grid:
             else:
                 W_param[c, t] = q[c, t]
     
-    num_groups = 11
-    # max_W_param = max(W_param.values())
+# =============================================================================
+#     num_groups = 11
+#     # max_W_param = max(W_param.values())
+#     
+#     # W_param_excl_0 = [val for val in W_param.values() if val != 0]
+#     # W_param_excl_0 = [val for val in W_param.values()]
+#     # min_W_param = min(W_param_excl_0)
+#     cat_group = {}
+#     W_param_cut = [0, 0.02, 0.04, 0.06, 0.09, 0.12, 0.1240, 0.1455, 0.1757, 0.22, 0.2881]
+#     for c in C:
+#         for t in T:
+#             if W_param[c, t] == 0:
+#                 cat_group[c, t] = 1 
+#             else:
+#                 for ind in range(0, len(W_param_cut) - 1):
+#                     if W_param_cut[ind] < W_param[c, t] <= W_param_cut[ind + 1]:
+#                         cat_group[c, t] = ind + 2 # assign a group for each c,t
+#     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
+# =============================================================================
+    num_groups = 10
+    max_W_param = max(W_param.values())
     
     # W_param_excl_0 = [val for val in W_param.values() if val != 0]
-    # W_param_excl_0 = [val for val in W_param.values()]
-    # min_W_param = min(W_param_excl_0)
+    W_param_excl_0 = [val for val in W_param.values()]
+    min_W_param = min(W_param_excl_0)
     cat_group = {}
-    W_param_cut = [0, 0.02, 0.04, 0.06, 0.09, 0.12, 0.1240, 0.1455, 0.1757, 0.22, 0.2881]
+    W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups - 1)
     for c in C:
         for t in T:
             if W_param[c, t] == 0:
@@ -353,8 +372,9 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
-        
+    # while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+
         ################ step 1 ################
         print('=============', counter, '===============')
         
@@ -384,7 +404,7 @@ for ending_time in ending_time_grid:
         
         if f_Z < Xi_ub:
             Xi_ub = f_Z   
-        if Xi_ub - Xi_lb <= delta * Xi_lb:
+        if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
             break
         
         print('Before optimization')
@@ -398,7 +418,7 @@ for ending_time in ending_time_grid:
         if Xi_lb == 0:
             g = np.inf
         else:
-            g = (Xi_ub - Xi_lb) / Xi_lb
+            g = abs(Xi_ub - Xi_lb) / Xi_lb
         print('counter is', counter)
         print('g is', g)
         
@@ -527,7 +547,7 @@ for ending_time in ending_time_grid:
         #         if value.X != 0:
         #             print(key, value.X)
         # =============================================================================
-    gap = (Xi_ub - Xi_lb) / Xi_lb
+    gap = abs(Xi_ub - Xi_lb) / Xi_lb
     print('Final MIPGap is', gap)
     end_time = time.time()
     running_time = end_time - start_time
