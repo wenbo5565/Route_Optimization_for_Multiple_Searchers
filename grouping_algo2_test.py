@@ -240,7 +240,7 @@ for ending_time in ending_time_grid:
 #                         cat_group[c, t] = ind + 2 # assign a group for each c,t
 #     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
 # =============================================================================
-    num_groups = 20
+    num_groups = 30
     max_W_param = max(W_param.values())
     
     # W_param_excl_0 = [val for val in W_param.values() if val != 0]
