@@ -98,7 +98,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 5
+    grid_size = 9
     ending_time = ending_time
     num_scenario = 1000
     
@@ -240,7 +240,7 @@ for ending_time in ending_time_grid:
 #                         cat_group[c, t] = ind + 2 # assign a group for each c,t
 #     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
 # =============================================================================
-    num_groups = 10
+    num_groups = 20
     max_W_param = max(W_param.values())
     
     # W_param_excl_0 = [val for val in W_param.values() if val != 0]
@@ -372,7 +372,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while counter <= 10 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
