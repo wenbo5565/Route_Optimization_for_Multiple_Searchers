@@ -68,7 +68,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 9
+    grid_size = 5
     ending_time = ending_time
     num_scenario = 1000
     
@@ -278,8 +278,10 @@ for ending_time in ending_time_grid:
         ################ step 2 ##############
         # def solve_p():
 
-        
-        g = (Xi_ub - Xi_lb) / Xi_lb
+        if Xi_lb == 0:
+            g = np.inf
+        else:
+            g = (Xi_ub - Xi_lb) / Xi_lb
         print('counter is', counter)
         print('g is', g)
         
