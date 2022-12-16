@@ -464,7 +464,7 @@ for ending_time in ending_time_grid:
         print('median', {group: np.median(finite_diff_coef[group]) for group in group_cnt.keys()})
         print('average', {group: np.mean(finite_diff_coef[group]) for group in group_cnt.keys()})
         print('max', {group: max(finite_diff_coef[group]) for group in group_cnt.keys()})        
-        
+        print('min', {group: min(finite_diff_coef[group]) for group in group_cnt.keys()})
         
         for t in T:
             for c in C:
