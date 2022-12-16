@@ -79,7 +79,7 @@ def is_searcher_occ(C, T, grid_size):
 ##################### End of helper function ####################
 
 ending_time_grid = list(range(7, 16))
-ending_time_grid = [5]
+ending_time_grid = [9]
 
 """ Import data
 """
@@ -93,14 +93,14 @@ else:
 time_log = {}
 for ending_time in ending_time_grid:
     # ending_time = ending_
-    ending_time = 7
+    # ending_time = 9
     print('===========================')
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 7
+    grid_size = 9
     ending_time = ending_time
-    num_scenario = 1000
+    # num_scenario = 1000
     
     """
     Creating set
@@ -108,7 +108,7 @@ for ending_time in ending_time_grid:
     C = [(i, j) for i in range(1, grid_size + 1) for j in range(1, grid_size + 1)]
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
-    Omega = list(range(1, num_scenario + 1))
+    # Omega = list(range(1, num_scenario + 1))
     J = 3
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
@@ -331,8 +331,8 @@ for ending_time in ending_time_grid:
     ZZZ = {} # dict to save ZZZ variable
     ZZZ_param = {}
     for group in group_cnt.keys():
-        # ZZZ[group] = m.addVar(lb = 0, ub = group_cnt[group], vtype = GRB.INTEGER)
-        ZZZ[group] = m.addVar(lb = 0, ub = 6, vtype = GRB.INTEGER)
+        ZZZ[group] = m.addVar(lb = 0, ub = group_cnt[group], vtype = GRB.INTEGER)
+        # ZZZ[group] = m.addVar(lb = 0, ub = 6, vtype = GRB.INTEGER)
         ZZZ[group].Start = 0
         ZZZ_param[group] = 0
     
@@ -482,6 +482,20 @@ for ending_time in ending_time_grid:
         """
         # m.NumStart = 0
         m.optimize()
+
+# =============================================================================
+#         m.computeIIS()
+#         if m.IISMinimal:
+#             print('IIS is minimal \n')
+#         else:
+#             print('IIS is not minimal \n')
+#         print('\n The following constraint(s) cannot be satisfied:')
+#         
+#         for c in m.getConstrs():
+#             if c.IISConstr:
+#                 print('%s' % c.constrName)
+# =============================================================================
+        
         
         lhs_val[counter]  = lhs[counter].getValue()
         print('===== iteration =====', counter, 'lhs after opt is', lhs_val[counter])
