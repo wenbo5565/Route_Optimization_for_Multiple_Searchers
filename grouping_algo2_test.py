@@ -460,6 +460,11 @@ for ending_time in ending_time_grid:
         lhs[counter] = f_Z + sum([min(finite_diff_coef[group]) * (ZZZ[group] - ZZZ_param[group]) for group in group_cnt.keys()]) 
         finite_diff_by_k = {group: min(finite_diff_coef[group]) for group in group_cnt.keys()}
         
+        print('===== finite difference among different gorups =====')
+        print('median', {group: np.median(finite_diff_coef[group]) for group in group_cnt.keys()})
+        print('average', {group: np.mean(finite_diff_coef[group]) for group in group_cnt.keys()})
+        print('max', {group: max(finite_diff_coef[group]) for group in group_cnt.keys()})        
+        
         
         for t in T:
             for c in C:
