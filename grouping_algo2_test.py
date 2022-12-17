@@ -98,7 +98,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 5
+    grid_size = 9
     ending_time = ending_time
     # num_scenario = 1000
     
@@ -120,44 +120,6 @@ for ending_time in ending_time_grid:
                 xx[c, t] = J
             else:
                 xx[c, t] = 0
-        
-# =============================================================================
-#     q_raw.columns = [int(col) for col in q_raw.columns]
-#     sub_q = list(product(C, T))
-#     q = {}
-#     for sub in sub_q:
-#         c_two_dim, t = sub
-#         c_one_dim = (c_two_dim[0] - 1) * grid_size + c_two_dim[1]
-#         q[c_two_dim, t] = q_raw.loc[c_one_dim, t]
-# =============================================================================
-    
-    
-    
-    
-    
-# =============================================================================
-#     # zeta_raw = pd.read_csv(data_folder + '\Zeta.csv', header = None, index_col = 0)
-#     
-#     Zeta = {}
-#     for path in range(1, zeta_raw.shape[0] + 1):
-#         for t in range(1, ending_time + 1):
-#             all_cells = C
-#             for cell in all_cells:
-#                 Zeta[(cell, t, path)] = 0 # set Zeta equal to 0
-#             cell_one_dim = zeta_raw.loc[path, 3 * (t - 1) + 1] # extract the occupied cell loc from Zeyu's path
-#             cell_two_dim = (cell_one_dim // grid_size + 1, np.mod(cell_one_dim, grid_size))
-#             Zeta[(cell_two_dim, t, path)] = 1 # set Zeta equal to 1 for occupied celll
-# =============================================================================
-    
-# =============================================================================
-#     W = {}
-#     for c in C:
-#         for t in T:
-#             if sum(Zeta[c, t, omega] for omega in Omega) >= 1:
-#                 W[c, t] = 1
-#             else:
-#                 W[c, t] = 0
-# =============================================================================
         
     """
     Creating parameters
@@ -221,6 +183,7 @@ for ending_time in ending_time_grid:
             else:
                 W_param[c, t] = q[c, t]
     
+    W_param = dict(sorted(W_param.items(), key = lambda x: x[0][1]))
 # =============================================================================
 #     num_groups = 11
 #     # max_W_param = max(W_param.values())
@@ -257,6 +220,8 @@ for ending_time in ending_time_grid:
                     if W_param_cut[ind] < W_param[c, t] <= W_param_cut[ind + 1]:
                         cat_group[c, t] = ind + 2 # assign a group for each c,t
     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
+    
+    cat_group = dict(sorted(cat_group.items(), key = lambda x: x[0][1]))
     
     group_prob = {}
     for c in C:
@@ -427,6 +392,7 @@ for ending_time in ending_time_grid:
         else:
             mip_gap = min([0.03, g / 3])
         # mip_gap = 0.1 / 2 ** (counter - 1)
+        mip_gap = 1e-4
         print('==== MIP Gap ====', mip_gap)
         m.setParam("MIPGap", mip_gap)
         
@@ -449,13 +415,26 @@ for ending_time in ending_time_grid:
         
         # m.addConstr(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi, name = 'cut_' + str(counter))
         finite_diff_coef = {}
+        Remove_finite_diff = {}
+        Remove_r = {}
+        Remove_s = {}
+        Remove_middle_term_1 = {}
+        Remove_middle_term_2 = {}
         for t in T:
             for c in C:
+                Remove_r[c, t] = r[c, t]
+                Remove_s[c, t] = s[c, t]
+                Remove_middle_term_1[c, t] = np.exp(-alpha * (Z_param[c, t] + 1))
+                Remove_middle_term_2[c, t] = np.exp(-alpha * (Z_param[c, t]))
+                Remove_finite_diff[c, t] = r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]
                 group = cat_group[c, t]
                 if group in finite_diff_coef.keys():
                     finite_diff_coef[group].append(r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t])
                 else:
                     finite_diff_coef[group] = [r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]]
+        
+        
+        
         
         lhs[counter] = f_Z + sum([min(finite_diff_coef[group]) * (ZZZ[group] - ZZZ_param[group]) for group in group_cnt.keys()]) 
         finite_diff_by_k = {group: min(finite_diff_coef[group]) for group in group_cnt.keys()}
