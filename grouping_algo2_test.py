@@ -79,7 +79,7 @@ def is_searcher_occ(C, T, grid_size):
 ##################### End of helper function ####################
 
 ending_time_grid = list(range(7, 16))
-ending_time_grid = [9]
+ending_time_grid = [10, 11]
 
 """ Import data
 """
@@ -98,7 +98,7 @@ for ending_time in ending_time_grid:
     print('ending time is', ending_time)
     print('===========================')
 
-    grid_size = 5
+    grid_size = 9
     print('===== grid size is =====', )
     ending_time = ending_time
     # num_scenario = 1000
@@ -344,7 +344,7 @@ for ending_time in ending_time_grid:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
-        print('=============', counter, '===============')
+        print('============= iteration', counter, '===============')
         
         r = {}
         for t in T:
@@ -491,7 +491,7 @@ for ending_time in ending_time_grid:
         
         
         lhs_val[counter]  = lhs[counter].getValue()
-        print('===== iteration =====', counter, 'lhs after opt is', lhs_val[counter])
+        print('====== lhs after optimization is =====', lhs_val[counter])
     
         for group in group_cnt.keys():
             zzz_val[str((counter, group))] = ZZZ[group].X
