@@ -99,6 +99,7 @@ for ending_time in ending_time_grid:
     print('===========================')
 
     grid_size = 9
+    print('===== grid size is =====', )
     ending_time = ending_time
     # num_scenario = 1000
     
@@ -281,7 +282,7 @@ for ending_time in ending_time_grid:
     # m.NumStart = 0
     
     # add variables
-    X = m.addVars(sub_X, lb = 0, name = 'X')
+    X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
     # Z = m.addVars(sub_Z, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     
     group_cnt = {}
@@ -358,7 +359,13 @@ for ending_time in ending_time_grid:
                     s[c, t] = 1
                 else:
                     s[c, t] = sum([s[c_prime, t + 1] * np.exp(-alpha * Z_param[c_prime, t + 1]) * gamma[c, c_prime, t] for c_prime in C])
-    
+        
+# =============================================================================
+#         for key, val in r.items():
+#             #if val != 0:
+#             print(key, val, '\n')
+# =============================================================================
+        
         # f_Z = sum([r[c, 1] * np.exp(-alpha * Z_param[c, 1]) * s[c, 1] for c in C])
         # f_Z_2 = sum([r[c, ending_time] * np.exp(-alpha * Z_param[c, ending_time]) * s[c, ending_time] for c in C])
         f_Z = sum([r[c, 5] * np.exp(-alpha * Z_param[c, 5]) * s[c, 5] for c in C])
@@ -567,5 +574,7 @@ for ending_time in ending_time_grid:
         log_result.write(json.dumps(lhs_val))
     with open('Grouping_X.txt', 'w') as log_result:
         log_result.write(json.dumps(x_val))
-    with open('Grouping_finite_diff.txt', 'w') as log_result:
-        log_result.write(json.dumps(finite_diff_val))
+# =============================================================================
+#     with open('Grouping_finite_diff.txt', 'w') as log_result:
+#         log_result.write(json.dumps(finite_diff_val))
+# =============================================================================
