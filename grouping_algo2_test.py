@@ -282,7 +282,9 @@ for ending_time in ending_time_grid:
     # m.NumStart = 0
     
     # add variables
+#    X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
     X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
+
     # Z = m.addVars(sub_Z, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     
     group_cnt = {}
