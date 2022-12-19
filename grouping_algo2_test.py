@@ -79,7 +79,7 @@ def is_searcher_occ(C, T, grid_size):
 ##################### End of helper function ####################
 
 ending_time_grid = list(range(7, 16))
-ending_time_grid = [10, 11]
+ending_time_grid = [9]
 
 """ Import data
 """
@@ -282,7 +282,7 @@ for ending_time in ending_time_grid:
     # m.NumStart = 0
     
     # add variables
-#    X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
+#   X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
     X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
 
     # Z = m.addVars(sub_Z, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
@@ -299,7 +299,7 @@ for ending_time in ending_time_grid:
     ZZZ = {} # dict to save ZZZ variable
     ZZZ_param = {}
     for group in group_cnt.keys():
-        ZZZ[group] = m.addVar(lb = 0, ub = group_cnt[group], vtype = GRB.INTEGER)
+        ZZZ[group] = m.addVar(lb = 0, ub = J * group_cnt[group], vtype = GRB.INTEGER)
         # ZZZ[group] = m.addVar(lb = 0, ub = 6, vtype = GRB.INTEGER)
         ZZZ[group].Start = 0
         ZZZ_param[group] = 0
@@ -340,7 +340,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while counter <= 10 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
