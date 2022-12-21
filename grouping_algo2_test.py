@@ -487,16 +487,18 @@ for ending_time in ending_time_grid:
         # m.NumStart = 0
         m.optimize()
 
-        m.computeIIS()
-        if m.IISMinimal:
-            print('IIS is minimal \n')
-        else:
-            print('IIS is not minimal \n')
-        print('\n The following constraint(s) cannot be satisfied:')
-        
-        for c in m.getConstrs():
-            if c.IISConstr:
-                print('%s' % c.constrName)
+# =============================================================================
+#         m.computeIIS()
+#         if m.IISMinimal:
+#             print('IIS is minimal \n')
+#         else:
+#             print('IIS is not minimal \n')
+#         print('\n The following constraint(s) cannot be satisfied:')
+#         
+#         for c in m.getConstrs():
+#             if c.IISConstr:
+#                 print('%s' % c.constrName)
+# =============================================================================
         
         
         lhs_val[counter]  = lhs[counter].getValue()
