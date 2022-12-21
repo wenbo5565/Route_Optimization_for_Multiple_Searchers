@@ -502,7 +502,7 @@ for ending_time in ending_time_grid:
         
         
         lhs_val[counter]  = lhs[counter].getValue()
-        print('====== lhs after optimization is =====', lhs_val[counter])
+        print('====== lhs after optimization is', lhs_val[counter])
     
         for group in group_cnt.keys():
             zzz_val[str((counter, group))] = ZZZ[group].X
