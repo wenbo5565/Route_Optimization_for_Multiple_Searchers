@@ -204,42 +204,45 @@ for ending_time in ending_time_grid:
 #                         cat_group[c, t] = ind + 2 # assign a group for each c,t
 #     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
 # =============================================================================
-    num_groups = 10
-    max_W_param = max(W_param.values())
-    
-    # W_param_excl_0 = [val for val in W_param.values() if val != 0]
-    W_param_excl_0 = [val for val in W_param.values()]
-    min_W_param = min(W_param_excl_0)
+    num_groups = 5
     cat_group = {}
-    W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups)
-    for c in C:
-        for t in T:
-            if W_param[c, t] == 0:
-                cat_group[c, t] = 1 
+    # W_param_t = []
+    for t in range(1, ending_time + 1):
+        W_param_t = {c_t: prob for c_t, prob in W_param.items() if c_t[1] == t}
+        max_W_param = max(W_param_t.values())
+        W_param_t_prob = [val for val in W_param_t.values()]
+        min_W_param = min(W_param_t_prob)
+        W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups)
+        for c in C:
+        # for t in T:
+            if W_param_t[c, t] == 0:
+                cat_group[c, t] = (1, t) 
             else:
                 for ind in range(0, len(W_param_cut) - 1):
-                    if W_param_cut[ind] < W_param[c, t] <= W_param_cut[ind + 1]:
-                        cat_group[c, t] = ind + 2 # assign a group for each c,t
+                    if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
+                        cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
     
     cat_group = dict(sorted(cat_group.items(), key = lambda x: x[0][1]))
     
-    group_prob = {}
-    for c in C:
-        for t in T:
-            group = cat_group[c, t]
-            if group in group_prob.keys():
-                group_prob[group].append(W_param[c, t])
-            else:
-                group_prob[group] = [W_param[c,t]]
-    
-    group_prob_diff = {}
-    
-    for group in group_prob.keys():
-        group_prob_diff[group] = [min(group_prob[group]), max(group_prob[group])]
-        group_prob_diff[group].append(group_prob_diff[group][1] - group_prob_diff[group][0])
-        
-    print("===== group probability difference =====", group_prob_diff)
+# =============================================================================
+#     group_prob = {}
+#     for c in C:
+#         for t in T:
+#             group = cat_group[c, t]
+#             if group in group_prob.keys():
+#                 group_prob[group].append(W_param[c, t])
+#             else:
+#                 group_prob[group] = [W_param[c,t]]
+#     
+#     group_prob_diff = {}
+#     
+#     for group in group_prob.keys():
+#         group_prob_diff[group] = [min(group_prob[group]), max(group_prob[group])]
+#         group_prob_diff[group].append(group_prob_diff[group][1] - group_prob_diff[group][0])
+#         
+#     print("===== group probability difference =====", group_prob_diff)
+# =============================================================================
 # =============================================================================
 #     np.random.seed(2022)
 #     q = np.random.uniform(low = 0, high = 1, size = num_scenario)
@@ -299,7 +302,7 @@ for ending_time in ending_time_grid:
     ZZZ = {} # dict to save ZZZ variable
     ZZZ_param = {}
     for group in group_cnt.keys():
-        ZZZ[group] = m.addVar(lb = 0, ub = J * group_cnt[group], vtype = GRB.INTEGER)
+        ZZZ[group] = m.addVar(lb = 0, ub = J, vtype = GRB.INTEGER)
         # ZZZ[group] = m.addVar(lb = 0, ub = 6, vtype = GRB.INTEGER)
         ZZZ[group].Start = 0
         ZZZ_param[group] = 0
@@ -324,6 +327,14 @@ for ending_time in ending_time_grid:
     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
     m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c, 0] for c in C), name = '15') #2d
     
+    group_by_t = {}
+    for k_t in group_cnt.keys():
+        if k_t[1] not in group_by_t.keys():
+            group_by_t[k_t[1]] = [k_t[0]] # add group k for time t
+        else:
+            group_by_t[k_t[1]].append(k_t[0]) # add group k for time t
+    
+    m.addConstrs((sum(ZZZ[k, t] for t in group_by_t.keys() for k in group_by_t[t] ) <= J for t in T), name = 'Z_kt bound')
     # cell_by_group 
     
     for group in group_cnt.keys():
