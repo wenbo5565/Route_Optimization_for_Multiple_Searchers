@@ -204,25 +204,29 @@ for ending_time in ending_time_grid:
 #                         cat_group[c, t] = ind + 2 # assign a group for each c,t
 #     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
 # =============================================================================
-    num_groups = 5
+    num_groups = 81
     cat_group = {}
     # W_param_t = []
     for t in range(1, ending_time + 1):
-        W_param_t = {c_t: prob for c_t, prob in W_param.items() if c_t[1] == t}
-        max_W_param = max(W_param_t.values())
-        W_param_t_prob = [val for val in W_param_t.values()]
-        min_W_param = min(W_param_t_prob)
-        W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups)
+        # W_param_t = {c_t: prob for c_t, prob in W_param.items() if c_t[1] == t}
+        # max_W_param = max(W_param_t.values())
+        # W_param_t_prob = [val for val in W_param_t.values()]
+        # min_W_param = min(W_param_t_prob)
+        # W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups)
+# =============================================================================
+#         for c in C:
+#         # for t in T:
+#             if W_param_t[c, t] == 0:
+#                 cat_group[c, t] = (1, t) 
+#             else:
+#                 for ind in range(0, len(W_param_cut) - 1):
+#                     if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
+#                         cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
+# =============================================================================
         for c in C:
-        # for t in T:
-            if W_param_t[c, t] == 0:
-                cat_group[c, t] = (1, t) 
-            else:
-                for ind in range(0, len(W_param_cut) - 1):
-                    if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
-                        cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
-    assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"
-    
+            cat_group[c, t] = (c, t)
+
+    assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"    
     cat_group = dict(sorted(cat_group.items(), key = lambda x: x[0][1]))
     
 # =============================================================================
