@@ -464,8 +464,10 @@ for ending_time in ending_time_grid:
         finite_diff_by_k = {group: min(finite_diff_coef[group]) for group in group_cnt.keys()}
         
         print('========= finite difference by group ===========')
-        for key,val in finite_diff_by_k.items():
-            print(key, val)
+# =============================================================================
+#         for key,val in finite_diff_by_k.items():
+#             print(key, val)
+# =============================================================================
         
         
         print('===== finite difference among different gorups =====')
@@ -515,12 +517,14 @@ for ending_time in ending_time_grid:
         lhs_val[counter]  = lhs[counter].getValue()
         print('====== lhs after optimization is', lhs_val[counter])
         
-        print('========== Z_wt ==========')
-        for group in group_cnt.keys():
-            print(group, ZZZ[group].X)        
-        print('========== Z_wt hat ======')
-        for group in group_cnt.keys():
-            print(group, ZZZ_param[group])
+# =============================================================================
+#         print('========== Z_wt ==========')
+#         for group in group_cnt.keys():
+#             print(group, ZZZ[group].X)        
+#         print('========== Z_wt hat ======')
+#         for group in group_cnt.keys():
+#             print(group, ZZZ_param[group])
+# =============================================================================
         
         for group in group_cnt.keys():
             zzz_val[str((counter, group))] = ZZZ[group].X
@@ -555,8 +559,10 @@ for ending_time in ending_time_grid:
                 
         for group in group_cnt.keys():
             ZZZ_param[group] = ZZZ[group].X
-            print('===== iteration: =====', counter)
-            print('===== ZZZ value is', group, ZZZ[group].X)
+# =============================================================================
+#             print('===== iteration: =====', counter)
+#             print('===== ZZZ value is', group, ZZZ[group].X)
+# =============================================================================
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
