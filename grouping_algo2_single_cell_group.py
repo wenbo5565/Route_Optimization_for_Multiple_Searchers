@@ -354,8 +354,8 @@ for ending_time in ending_time_grid:
     finite_diff_val = {}
     
     start_time = time.time()
-    while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
-    # while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
+    while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
