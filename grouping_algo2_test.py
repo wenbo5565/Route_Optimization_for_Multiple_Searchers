@@ -223,8 +223,8 @@ for ending_time in ending_time_grid:
 #                     if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
 #                         cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
 # =============================================================================
-        for c in C:
-            cat_group[c, t] = (c, t)
+        for ind, c in enumerate(C):
+            cat_group[c, t] = (ind + 1, t)
 
     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"    
     cat_group = dict(sorted(cat_group.items(), key = lambda x: x[0][1]))
