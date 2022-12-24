@@ -355,7 +355,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
-    while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while counter <= 10 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
@@ -553,12 +553,17 @@ for ending_time in ending_time_grid:
             #    subs.append(sub)
             c, t = sub
             Z_param[c, t] = sum(X[c_prime, c, t - 1].X for c_prime in C if is_nearby_cell(c, c_prime))
-            if Z_param[c, t] != 0:
-                print(c,t, Z_param[c,t])
-                z_recov_val[str((counter, c, t))] = Z_param[c, t]
+            # if Z_param[c, t] != 0:
+            #    print(c,t, Z_param[c,t])
+            #    z_recov_val[str((counter, c, t))] = Z_param[c, t]
                 
         for group in group_cnt.keys():
             ZZZ_param[group] = ZZZ[group].X
+            
+        print("========== Z_ct value is ==========")
+        for group in group_cnt.keys():
+            if ZZZ[group].X != 0:
+                print(group, ZZZ[group])
 # =============================================================================
 #             print('===== iteration: =====', counter)
 #             print('===== ZZZ value is', group, ZZZ[group].X)
