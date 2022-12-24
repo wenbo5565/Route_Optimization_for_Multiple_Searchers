@@ -308,7 +308,20 @@ for ending_time in ending_time_grid:
             group_cnt[group] = 1
         else:
             group_cnt[group] += 1
+    
+    # record 
+    group_by_cell = {}
+    for c_t, k_t in cat_group.items():
+        if k_t not in group_by_cell.keys():
+            group_by_cell[k_t] = [c_t]
+        else:
+            group_by_cell[k_t].append(c_t)
             
+    group_by_cell = dict(sorted(group_by_cell.items(), key = lambda x: (x[0][1], x[0][0])))
+    print('group(k,t) and its component cell(c,t)')
+    for 
+    
+    
     print(' ===== number of cells per group =====', group_cnt)
     
     ZZZ = {} # dict to save ZZZ variable
