@@ -553,6 +553,7 @@ for ending_time in ending_time_grid:
         
         subs = []
         print('====== recalculated Z_ct ======')
+        Z_param_prior_opt = Z_param.copy()
         for sub in sub_Z: # for the grouping algorithm, we need to recalculate Z
             # print(sub)
             # if Z_param[sub] != Z[sub].X:
@@ -563,11 +564,20 @@ for ending_time in ending_time_grid:
             if Z_param[c, t] != 0:
                 z_recov_val[str((counter, c, t))] = Z_param[c, t]
                 print(c,t, Z_param[c, t])
-                
+        
+        second_lhs = f_Z + sum(r[c, t] * (np.exp(-alpha * (Z_param_prior_opt[c, t] + 1)) - np.exp(-alpha * Z_param_prior_opt[c, t])) * s[c, t] * (Z_param[c, t] - Z_param_prior_opt[c, t]) for c in C for t in T)        
+        print('===== lhs from recalculated Z_ct =====',second_lhs)
+        
         for group in group_cnt.keys():
             ZZZ_param[group] = ZZZ[group].X
-            print('===== iteration: =====', counter)
-            print('===== ZZZ value is', group, ZZZ[group].X)
+            # print('===== iteration: =====', counter)
+            if ZZZ[group].X != 0:
+                print('===== ZZZ value is', group, ZZZ[group].X)
+            
+        for sub in sub_Z:
+            c,t = sub
+            if Z_param[c, t] != 0:
+                print('===== recalculated Z_ct is', Z_param[c, t])
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
