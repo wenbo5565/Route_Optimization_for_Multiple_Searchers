@@ -563,7 +563,7 @@ for ending_time in ending_time_grid:
         print("========== Z_ct value is ==========")
         for group in group_cnt.keys():
             if ZZZ[group].X != 0:
-                print(group, ZZZ[group])
+                print(group, ZZZ[group].X)
 # =============================================================================
 #             print('===== iteration: =====', counter)
 #             print('===== ZZZ value is', group, ZZZ[group].X)
