@@ -577,7 +577,7 @@ for ending_time in ending_time_grid:
         for sub in sub_Z:
             c,t = sub
             if Z_param[c, t] != 0:
-                print('===== recalculated Z_ct is', Z_param[c, t])
+                print('===== recalculated Z_ct is', c,t, Z_param[c, t])
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
