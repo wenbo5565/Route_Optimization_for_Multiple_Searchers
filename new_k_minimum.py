@@ -220,21 +220,43 @@ for ending_time in ending_time_grid:
         max_W_param = max(W_param_t.values())
         # W_param_t_prob = [val for val in W_param_t.values()]
         min_W_param = min(W_param_t.values())
-        W_param_cut = np.linspace(min_W_param, max_W_param, num = num_groups)
+        W_param_cut = list(np.linspace(min_W_param, max_W_param, num = num_groups))
+        if min_W_param != 0:
+            W_param_cut.append(0)
+            W_param_cut = sorted(W_param_cut)
         for c in C:
-            # for t in T:
+            # for t in T:                
             if W_param_t[c, t] == 0:
+                # print('c,t is', c, t)
                 cat_group[c, t] = (1, t) 
             else:
+                # print('c,t is', c, t)
                 for ind in range(0, len(W_param_cut) - 1):
                     if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
+                        # print('assigned')
                         cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
-# =============================================================================
+            
+        
+        # =============================================================================
 #         for ind, c in enumerate(C):
 #             cat_group[c, t] = (c[0], t)
 # 
 # =============================================================================
     assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"    
+    
+# =============================================================================
+#     test_obj = {}
+#     
+#     for c_t, k_t in cat_group.items():
+#         if c_t[1] not in test_obj.keys():
+#             test_obj[c_t[1]] = 1
+#         else:
+#             test_obj[c_t[1]] += 1
+# =============================================================================
+            
+    
+    
+    
     cat_group = dict(sorted(cat_group.items(), key = lambda x: x[0][1]))
     
 # =============================================================================
