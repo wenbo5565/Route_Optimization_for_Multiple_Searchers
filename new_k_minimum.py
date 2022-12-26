@@ -382,7 +382,7 @@ for ending_time in ending_time_grid:
         else:
             group_by_t[k_t[1]].append(k_t[0]) # add group k for time t
     
-    # m.addConstrs((sum(ZZZ[k, t] for k in group_by_t[t] ) <= J for t in group_by_t.keys()), name = 'Z_kt bound')
+    m.addConstrs((sum(ZZZ[k, t] for k in group_by_t[t] ) <= J for t in group_by_t.keys()), name = 'Z_kt bound')
     # cell_by_group 
     
     for group in group_cnt.keys():
