@@ -442,7 +442,7 @@ for ending_time in ending_time_grid:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
     while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
-        
+        print('============= iteration', counter, '===============')
 # =============================================================================
 #         Z_param = Z_param_new.copy()
 #         ################ step 1 ################
@@ -805,7 +805,7 @@ for ending_time in ending_time_grid:
             Z_param[c, t] = sum(X[c_prime, c, t - 1].X for c_prime in C if is_nearby_cell(c, c_prime))
             if Z_param[c, t] != 0:
                 z_recov_val[str((counter, c, t))] = Z_param[c, t]
-                print(c,t, Z_param[c, t])
+                # print(c,t, Z_param[c, t])
         
         second_lhs = f_Z + sum(r[c, t] * (np.exp(-alpha * (Z_param_prior_opt[c, t] + 1)) - np.exp(-alpha * Z_param_prior_opt[c, t])) * s[c, t] * (Z_param[c, t] - Z_param_prior_opt[c, t]) for c in C for t in T)        
         print('===== lhs from recalculated Z_ct =====',second_lhs)
