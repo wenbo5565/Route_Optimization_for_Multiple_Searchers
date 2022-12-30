@@ -235,40 +235,42 @@ for ending_time in ending_time_grid:
     W_param_t = {}
     
     
+    # =============================================================================
+    #         W_param_t = {c_t: prob for c_t, prob in W_param.items() if c_t[1] == t}
+    #         max_W_param = max(W_param_t.values())
+    #         # W_param_t_prob = [val for val in W_param_t.values()]
+    #         min_W_param = min(W_param_t.values())
+    #         W_param_cut = list(np.linspace(min_W_param, max_W_param, num = num_groups))
+    #         if min_W_param != 0:
+    #             W_param_cut.append(0)
+    #             W_param_cut = sorted(W_param_cut)
+    #         for c in C:
+    #             # for t in T:                
+    #             if W_param_t[c, t] == 0:
+    #                 # print('c,t is', c, t)
+    #                 cat_group[c, t] = (1, t) 
+    #             else:
+    #                 # print('c,t is', c, t)
+    #                 for ind in range(0, len(W_param_cut) - 1):
+    #                     if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
+    #                         # print('assigned')
+    #                         cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
+    # =============================================================================
+    
+    
     for t in range(1, ending_time + 1):
-# =============================================================================
-#         W_param_t = {c_t: prob for c_t, prob in W_param.items() if c_t[1] == t}
-#         max_W_param = max(W_param_t.values())
-#         # W_param_t_prob = [val for val in W_param_t.values()]
-#         min_W_param = min(W_param_t.values())
-#         W_param_cut = list(np.linspace(min_W_param, max_W_param, num = num_groups))
-#         if min_W_param != 0:
-#             W_param_cut.append(0)
-#             W_param_cut = sorted(W_param_cut)
-#         for c in C:
-#             # for t in T:                
-#             if W_param_t[c, t] == 0:
-#                 # print('c,t is', c, t)
-#                 cat_group[c, t] = (1, t) 
-#             else:
-#                 # print('c,t is', c, t)
-#                 for ind in range(0, len(W_param_cut) - 1):
-#                     if W_param_cut[ind] < W_param_t[c, t] <= W_param_cut[ind + 1]:
-#                         # print('assigned')
-#                         cat_group[c, t] = (ind + 2, t) # assign a group for each c,t
-# =============================================================================
         if t not in T_no_detect:
             for c in C:
                 if (c, t) not in part_T_no_detect_pairs:
         # for ind, c in enumerate(C):
                     cat_group[c, t] = (c, t)
-        print('c, t pairs in the individual c,t group', len((list(cat_group.keys()))))
-        print('c, t pairs in the full no value t group', len(T_no_detect) * grid_size * grid_size)
-        print('c, t pairs in the part no value g group', len(part_T_no_detect_pairs))
-        ct_pairs_sum = len(list(cat_group.keys())) + len(T_no_detect) * grid_size * grid_size + len(part_T_no_detect_pairs)
-        print('sum is', ct_pairs_sum)
-        print('the total number of c t paris are', grid_size * grid_size * ending_time)
-        assert ct_pairs_sum == grid_size * grid_size * ending_time, "Not all c,t pairs are properly bucketized"
+    print('c, t pairs in the individual c,t group', len((list(cat_group.keys()))))
+    print('c, t pairs in the full no value t group', len(T_no_detect) * grid_size * grid_size)
+    print('c, t pairs in the part no value g group', len(part_T_no_detect_pairs))
+    ct_pairs_sum = len(list(cat_group.keys())) + len(T_no_detect) * grid_size * grid_size + len(part_T_no_detect_pairs)
+    print('sum is', ct_pairs_sum)
+    print('the total number of c t paris are', grid_size * grid_size * ending_time)
+    assert ct_pairs_sum == grid_size * grid_size * ending_time, "Not all c,t pairs are properly bucketized"
     # assert len(cat_group.keys()) == len(W_param.keys()), "Not all c,t pairs are grouped"    
     
 # =============================================================================
