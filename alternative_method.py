@@ -436,7 +436,7 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
-    while counter <= 2 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
         
 # =============================================================================
@@ -741,20 +741,24 @@ for ending_time in ending_time_grid:
                 
                 
             
-        modified_model = m.copy()
-        orig_num_vars = modified_model.NumVars
-        modified_model.feasRelaxS(0, False, True, False)
-        modified_model.optimize()
+# =============================================================================
+#         modified_model = m.copy()
+#         orig_num_vars = modified_model.NumVars
+#         modified_model.feasRelaxS(0, False, True, False)
+#         modified_model.optimize()
+# =============================================================================
         
         
-        slacks = modified_model.getVars()[orig_num_vars:]
-        for sv in slacks:
-            if sv.X > 1e-9:
-                print('%s = %g' % (sv.VarName, sv.X))
-        
-        lhs_val[counter]  = lhs[counter].getValue()
-        print('====== lhs after optimization is', lhs_val[counter])
-    
+# =============================================================================
+#         slacks = modified_model.getVars()[orig_num_vars:]
+#         for sv in slacks:
+#             if sv.X > 1e-9:
+#                 print('%s = %g' % (sv.VarName, sv.X))
+#         
+#         lhs_val[counter]  = lhs[counter].getValue()
+#         print('====== lhs after optimization is', lhs_val[counter])
+#     
+# =============================================================================
 # =============================================================================
 #         for group in group_cnt.keys():
 #             zzz_val[str((counter, group))] = ZZZ[group].X
