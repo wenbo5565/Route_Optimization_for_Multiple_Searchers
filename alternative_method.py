@@ -372,9 +372,11 @@ for ending_time in ending_time_grid:
             group_by_cell[k_t].append(c_t)
             
     group_by_cell = dict(sorted(group_by_cell.items(), key = lambda x: (x[0][1], x[0][0])))
-    print('group(k,t) and its component cell(c,t)')
-    for k_t, c_t in group_by_cell.items():
-        print(k_t, ':', c_t, '\n')
+# =============================================================================
+#     print('group(k,t) and its component cell(c,t)')
+#     for k_t, c_t in group_by_cell.items():
+#         print(k_t, ':', c_t, '\n')
+# =============================================================================
     
     
     print(' ===== number of cells per group =====', group_cnt)
@@ -766,12 +768,14 @@ for ending_time in ending_time_grid:
 #             zzz_val[str((counter, group))] = ZZZ[group].X
 # =============================================================================
         
-        print('========== Z_wt ==========')
-        for group in group_cnt.keys():
-            print(group, ZZZ[group].X)        
-        print('========== Z_wt hat ======')
-        for group in group_cnt.keys():
-            print(group, ZZZ_param[group])
+# =============================================================================
+#         print('========== Z_wt ==========')
+#         for group in group_cnt.keys():
+#             print(group, ZZZ[group].X)        
+#         print('========== Z_wt hat ======')
+#         for group in group_cnt.keys():
+#             print(group, ZZZ_param[group])
+# =============================================================================
         
         for key, val in X.items():
             if val.X != 0:
