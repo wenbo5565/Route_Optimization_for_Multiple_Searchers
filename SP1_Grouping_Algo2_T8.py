@@ -80,7 +80,7 @@ def is_searcher_occ(C, T, grid_size):
 
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = [7, 8 , 9 , 10]
-ending_time_grid = [9]
+ending_time_grid = [7, 8, 9]
 
 
 """ Import data
@@ -633,12 +633,14 @@ for ending_time in ending_time_grid:
         # cuts.append(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi)
         
         # m.addConstr(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi, name = 'cut_' + str(counter))
-        finite_diff_coef = {}
+        # finite_diff_coef = {}
         Remove_finite_diff = {}
-        Remove_r = {}
-        Remove_s = {}
-        Remove_middle_term_1 = {}
-        Remove_middle_term_2 = {}
+# =============================================================================
+#         Remove_r = {}
+#         Remove_s = {}
+#         Remove_middle_term_1 = {}
+#         Remove_middle_term_2 = {}
+# =============================================================================
         adj_finite_diff_coef = {}
 
         for t in T:
@@ -653,7 +655,7 @@ for ending_time in ending_time_grid:
                 else:
                     Remove_finite_diff[c, t] = r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]
                 group = cat_group[c, t]
-                if group in finite_diff_coef.keys():
+                if group in adj_finite_diff_coef.keys():
                     # finite_diff_coef[group].append(r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t])
                     adj_finite_diff_coef[group].append(searcher_reachable[c, t] * r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t])
                 else:
@@ -842,10 +844,10 @@ for ending_time in ending_time_grid:
 #         print('===== lhs from recalculated Z_ct =====',second_lhs)
 # =============================================================================
         
+        for group in group_cnt.keys():
+            ZZZ_param[group] = ZZZ[group].X
+            # print('===== iteration: =====', counter)
 # =============================================================================
-#         for group in group_cnt.keys():
-#             ZZZ_param[group] = ZZZ[group].X
-#             # print('===== iteration: =====', counter)
 #             if ZZZ[group].X != 0:
 #                 print('===== ZZZ value is', group, ZZZ[group].X)
 # =============================================================================
