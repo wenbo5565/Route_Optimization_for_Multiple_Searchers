@@ -230,9 +230,9 @@ for ending_time in ending_time_grid:
     # constr_Z_0 = m.a
     part_T_no_detect_pairs = sum(part_T_no_detect.values(), [])
 
-    num_groups = 5
+    # num_groups = 5
     cat_group = {}
-    W_param_t = {}
+    # W_param_t = {}
     
     
     # =============================================================================
@@ -416,20 +416,39 @@ for ending_time in ending_time_grid:
         else:
             group_by_t[k_t[1]].append(k_t[0]) # add group k for time t
     
-    constr_Z_t_J = m.addConstrs((part_Z_0[t] + sum(ZZZ[k, t] for k in group_by_t[t] ) <= J for t in group_by_t.keys()), name = 'Z_kt bound')
+    # 2.22
+    constr_Z_t_J = m.addConstrs((part_Z_0[t] + sum(ZZZ[k, t] for k in group_by_t[t] ) == J for t in group_by_t.keys()), name = 'Z_kt bound')
     # cell_by_group 
-    constr_Z_ct_0 = m.addConstrs((ZZZ[group] == 0 for group in group_cnt.keys() if searcher_reachable[group] == 0), name = 'z_ct_0')
+    
+    # 2.23
+    # constr_Z_ct_0 = m.addConstrs((ZZZ[group] == 0 for group in group_cnt.keys() if searcher_reachable[group] == 0), name = 'z_ct_0')
     
     
     constr_16 = {}
     for group in group_cnt.keys():
         # group = 1
         # constr_16[group] = (m.addConstr((sum(X[c_prime, c, t - 1] for c in C for t in T for c_prime in C if cat_group[c, t] == group and is_nearby_cell(c, c_prime)) == ZZZ[group]), name = '16_' + str(group))) #2d
-        if searcher_reachable[group] == 0:
-            constr_16[group] = (m.addConstr((sum(X[c_prime, group[0], group[1] - 1] for c_prime in C if is_nearby_cell(group[0], c_prime)) == ZZZ[group]), name = '16_' + str(group))) #2d
-
-
+        # if searcher_reachable[group] == 0:
+        #    print(group)
+        constr_16[group] = (m.addConstr((sum(X[c_prime, group[0], group[1] - 1] for c_prime in C if is_nearby_cell(group[0], c_prime)) == ZZZ[group]), name = '16_' + str(group))) #2d
     
+    for t in T_no_detect:
+        constr_link_x_Z_0 = m.addConstr((sum(X[c_prime, c, t - 1] for c in C for c_prime in C if is_nearby_cell(c, c_prime)) == Z_0[t]), name = '16_link_Z_0_' + str(t)) 
+        
+    for t in part_T_no_detect.keys():
+        constr_link_x_part_Z_0 = m.addConstr((sum(X[c_prime, c_t[0], t - 1] for c_t in part_T_no_detect[t] for c_prime in C if searcher_reachable[c_t] > 0 and is_nearby_cell(c, c_prime)) == part_Z_0[t]), name = '16_link_part_Z_0_' + str(t)) 
+# =============================================================================
+#     constr_Z_ct_fd_0 = m.addConstrs((ZZZ[group] == 0 for group in group_cnt.keys() if searcher_reachable[group] == 1 and Remove_finite_diff[group] == 0), name = 'z_ct_fd_0')
+#             
+#             
+#     constr_x_z = {}
+#     for group in group_cnt.keys():
+#         # group = 1
+#         # constr_16[group] = (m.addConstr((sum(X[c_prime, c, t - 1] for c in C for t in T for c_prime in C if cat_group[c, t] == group and is_nearby_cell(c, c_prime)) == ZZZ[group]), name = '16_' + str(group))) #2d
+#         if searcher_reachable[group] == 1 and Remove_finite_diff[group] == 0:
+#             constr_x_z[group] = (m.addConstr((sum(X[c_prime, group[0], group[1] - 1] for c_prime in C if is_nearby_cell(group[0], c_prime)) == ZZZ[group]), name = 'x_z' + str(group))) #2d
+# =============================================================================
+
     # m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == Z[c, t] for c in C for t in T), name = '16') #2d
     lhs = {}
     lhs_val = {}
@@ -440,8 +459,8 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
-    while counter <= 5 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
-    # while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    # while counter <= 100 and abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
         print('============= iteration', counter, '===============')
 # =============================================================================
 #         Z_param = Z_param_new.copy()
@@ -640,15 +659,6 @@ for ending_time in ending_time_grid:
                     adj_finite_diff_coef[group] = [searcher_reachable[c, t] * r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t]]
         
         
-        constr_Z_ct_fd_0 = m.addConstrs((ZZZ[group] == 0 for group in group_cnt.keys() if searcher_reachable[group] == 1 and Remove_finite_diff[group] == 0), name = 'z_ct_fd_0')
-        
-        
-        constr_x_z = {}
-        for group in group_cnt.keys():
-            # group = 1
-            # constr_16[group] = (m.addConstr((sum(X[c_prime, c, t - 1] for c in C for t in T for c_prime in C if cat_group[c, t] == group and is_nearby_cell(c, c_prime)) == ZZZ[group]), name = '16_' + str(group))) #2d
-            if searcher_reachable[group] == 1 and Remove_finite_diff[group] == 0:
-                constr_x_z[group] = (m.addConstr((sum(X[c_prime, group[0], group[1] - 1] for c_prime in C if is_nearby_cell(group[0], c_prime)) == ZZZ[group]), name = 'x_z' + str(group))) #2d
 
         
         
@@ -659,17 +669,21 @@ for ending_time in ending_time_grid:
                 if q[c,t] == 0:
                     set_q_zero.append((c,t))
         
-        for c_t in set_q_zero:
-            print(c_t, Remove_finite_diff[c_t])
+# =============================================================================
+#         for c_t in set_q_zero:
+#             print(c_t, Remove_finite_diff[c_t])
+# =============================================================================
         
         
         q_sorted = dict(sorted(q.items(), key = lambda x: x[1]))
         Remove_finite_diff = dict(sorted(Remove_finite_diff.items(), key = lambda x: x[1], reverse = True))
         
-        for t in T:
-            for c in C:
-                if Remove_finite_diff[c,t] == 0 and q[c,t] * W_param[c,t] > 0:
-                    print(c,t)
+# =============================================================================
+#         for t in T:
+#             for c in C:
+#                 if Remove_finite_diff[c,t] == 0 and q[c,t] * W_param[c,t] > 0:
+#                     print(c,t)
+# =============================================================================
         
         
         # 0 + sum([min(adj_finite_diff_coef[group]) * (ZZZ[group] - ZZZ_param[group]) for group in group_cnt.keys()]) 
