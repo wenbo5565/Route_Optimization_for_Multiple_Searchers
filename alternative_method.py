@@ -351,8 +351,8 @@ for ending_time in ending_time_grid:
     part_Z_0 = m.addVars(list(part_T_no_detect.keys()), name = 'part_Z_0', vtype = GRB.CONTINUOUS)
     
     # add variables
-    X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
-    # X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.CONTINUOUS)
+    # X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.INTEGER)
+    X = m.addVars(sub_X, lb = 0, name = 'X', vtype = GRB.CONTINUOUS)
 
     # Z = m.addVars(sub_Z, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     
