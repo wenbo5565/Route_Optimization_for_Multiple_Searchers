@@ -80,7 +80,7 @@ def is_searcher_occ(C, T, grid_size):
 
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = [7, 8 , 9 , 10]
-ending_time_grid = [7, 8, 9, 10, 11, 12, 13, 14, 15]
+ending_time_grid = [7, 8, 9, 10, 11]
 
 
 """ Import data
@@ -112,7 +112,7 @@ for ending_time in ending_time_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     # Omega = list(range(1, num_scenario + 1))
-    J = 15
+    J = 3
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     
@@ -611,8 +611,8 @@ for ending_time in ending_time_grid:
         else:
             mip_gap = min([0.03, g / 3])
         # mip_gap = 0.1 / 2 ** (counter - 1)
-        mip_gap = 1e-4
-        print('==== MIP Gap ====', mip_gap)
+        # mip_gap = 1e-4
+        # print('==== MIP Gap ====', mip_gap)
         m.setParam("MIPGap", mip_gap)
         
         # turn off warm start
