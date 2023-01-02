@@ -80,7 +80,7 @@ def is_searcher_occ(C, T, grid_size):
 
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = [7, 8 , 9 , 10]
-ending_time_grid = [12, 13, 14, 15]
+ending_time_grid = [9,12]
 # ending_time_grid = [7, 8, 9, 10, 11]
 
 
@@ -912,7 +912,7 @@ for ending_time in ending_time_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[ending_time] = [gap, running_time, Xi_ub]
+    time_log[ending_time] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb}
     
 print(time_log)
 with open('time_log_T8.txt', 'w') as log_result:
