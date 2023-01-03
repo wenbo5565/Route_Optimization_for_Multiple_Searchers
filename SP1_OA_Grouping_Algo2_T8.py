@@ -79,7 +79,8 @@ def is_searcher_occ(C, T, grid_size):
 ##################### End of helper function ####################
 
 # ending_time_grid = list(range(7, 16))
-ending_time_grid = [7, 8 , 9]
+# ending_time_grid = [7, 8 , 9]
+ending_time_grid = [10, 11 , 12, 13, 14, 15]
 # ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
 
