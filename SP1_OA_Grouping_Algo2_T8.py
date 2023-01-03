@@ -939,7 +939,7 @@ for ending_time in ending_time_grid:
     for t in T:
         for c in C:
             if Z_param[c, t] != 0:
-                final_sol.append((c, t, Z_param[c,t]))
+                final_sol.append((c, t, round(Z_param[c,t], 2)))
     for sol in final_sol:
         if int(sol[2]) != sol[2]:
             frac_solution = True
