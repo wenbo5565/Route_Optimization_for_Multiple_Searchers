@@ -79,8 +79,8 @@ def is_searcher_occ(C, T, grid_size):
 ##################### End of helper function ####################
 
 # ending_time_grid = list(range(7, 16))
-# ending_time_grid = [7, 8 , 9 , 10]
-ending_time_grid = [12, 13, 14, 15]
+ending_time_grid = [7, 8 , 9]
+# ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
 
 
@@ -113,7 +113,7 @@ for ending_time in ending_time_grid:
     T = list(range(1, ending_time + 1))
     T0 = [0] + T
     # Omega = list(range(1, num_scenario + 1))
-    J = 3
+    J = 15
     I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     
@@ -611,10 +611,8 @@ for ending_time in ending_time_grid:
         
         if f_Z < Xi_ub:
             Xi_ub = f_Z   
-# =============================================================================
-#         if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
-#             break
-# =============================================================================
+        if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
+            break
         
         print('Before optimization')
         print('Xi upper', Xi_ub)
@@ -936,7 +934,17 @@ for ending_time in ending_time_grid:
     end_time = time.time()
     running_time = end_time - start_time
     print("Running time is", running_time)
-    time_log[ending_time] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb}
+    frac_solution = False
+    final_sol = []
+    for t in T:
+        for c in C:
+            if Z_param[c, t] != 0:
+                final_sol.append((c, t, Z_param[c,t]))
+    for sol in final_sol:
+        if int(sol[2]) != sol[2]:
+            frac_solution = True
+    time_log[ending_time] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
+                             'opt_sol': final_sol}
     
 print(time_log)
 with open('time_log_T8.txt', 'w') as log_result:
