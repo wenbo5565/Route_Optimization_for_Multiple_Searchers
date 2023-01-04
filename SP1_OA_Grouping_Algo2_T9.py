@@ -81,7 +81,7 @@ def is_searcher_occ(C, T, grid_size):
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = [7, 8 , 9]
 # J_grid = [1, 2, 3]
-J_grid = [4, 5, 10, 15]
+J_grid = [1, 2, 3, 4, 5, 10, 15]
 # ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
 
@@ -400,7 +400,7 @@ for J in J_grid:
     for t in group_by_t_w_q.keys():
         group_by_t_w_q[t] = sorted(group_by_t_w_q[t], key = lambda x: x[1], reverse = True)
     
-    largest_num = 10
+    largest_num = 6
     
     group_by_t_largest = {}
     for t in group_by_t_w_q.keys():
@@ -946,7 +946,7 @@ for J in J_grid:
         if int(sol[2]) != sol[2]:
             frac_solution = True
     time_log[J] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
-                             'opt_sol': final_sol}
+                             'opt_sol': final_sol, 'largest_num': largest_num}
     
 print(time_log)
 with open('time_log_T9.txt', 'w') as log_result:
