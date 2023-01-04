@@ -80,8 +80,8 @@ def is_searcher_occ(C, T, grid_size):
 
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = [7, 8 , 9]
-J_grid = [1, 2, 3]
-# J_grid = [4, 5, 10, 15]
+# J_grid = [1, 2, 3]
+J_grid = [4, 5, 10, 15]
 # ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
 
@@ -949,7 +949,7 @@ for J in J_grid:
                              'opt_sol': final_sol}
     
 print(time_log)
-with open('time_log_T8.txt', 'w') as log_result:
+with open('time_log_T9.txt', 'w') as log_result:
     log_result.write(json.dumps(time_log))
 # =============================================================================
 #     log_result.write(json.dumps(time_log))
