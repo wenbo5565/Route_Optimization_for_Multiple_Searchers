@@ -84,7 +84,9 @@ def is_searcher_occ(C, T, grid_size):
 # J_grid = [4, 5, 10, 15]
 # ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
-grid_size_grid = [9, 11, 13, 15]
+# grid_size_grid = [9, 11, 13, 15]
+grid_size_grid = [7]
+
 
 """ Import data
 """
