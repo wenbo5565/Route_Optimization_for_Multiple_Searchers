@@ -448,7 +448,9 @@ for grid_size in grid_size_grid:
 
     
     # 2.22
-    constr_Z_t_J = m.addConstrs((part_Z_0[t] + sum(ZZZ[k, t] for k in group_by_t[t] ) == J for t in group_by_t.keys()), name = 'Z_kt bound')
+    # constr_Z_t_J = m.addConstrs((part_Z_0[t] + sum(ZZZ[k, t] for k in group_by_t[t] ) == J for t in group_by_t.keys()), name = 'Z_kt bound')
+    constr_Z_t_J = m.addConstrs((part_Z_0[t] + sum(ZZZ[k, t] for k in group_by_t[t] ) == J  if t in part_T_no_detect.keys() else sum(ZZZ[k, t] for k in group_by_t[t] ) == J for t in group_by_t.keys()), name = 'Z_kt bound')
+    
     # cell_by_group 
     
     # 2.23
