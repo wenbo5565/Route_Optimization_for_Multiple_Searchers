@@ -945,7 +945,7 @@ for ending_time in ending_time_grid:
         if int(sol[2]) != sol[2]:
             frac_solution = True
     time_log[ending_time] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
-                             'opt_sol': final_sol}
+                             'opt_sol': final_sol,'largest_num': largest_num}
     
 print(time_log)
 with open('time_log_T8.txt', 'w') as log_result:
