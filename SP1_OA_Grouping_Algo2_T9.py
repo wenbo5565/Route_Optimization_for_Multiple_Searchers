@@ -400,7 +400,7 @@ for J in J_grid:
     for t in group_by_t_w_q.keys():
         group_by_t_w_q[t] = sorted(group_by_t_w_q[t], key = lambda x: x[1], reverse = True)
     
-    largest_num = 10
+    largest_num = 6
     
     group_by_t_largest = {}
     for t in group_by_t_w_q.keys():
