@@ -85,7 +85,7 @@ def is_searcher_occ(C, T, grid_size):
 # ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
 # grid_size_grid = [9, 11, 13, 15]
-grid_size_grid = [5, 7]
+grid_size_grid = [5]
 
 
 """ Import data
@@ -966,7 +966,7 @@ for grid_size in grid_size_grid:
              is_best_ub_frac = True
              break
          
-    time_log[J] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
+    time_log[grid_size] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
                    'opt_sol': final_sol, 'largest_num': largest_num, 'best_ub_sol': best_ub_sol,
                    'is_best_ub_frac': is_best_ub_frac, 'ub_log': ub_log}
     
