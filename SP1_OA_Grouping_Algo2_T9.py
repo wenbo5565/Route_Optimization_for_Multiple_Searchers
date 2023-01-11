@@ -81,10 +81,10 @@ def is_searcher_occ(C, T, grid_size):
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = [7, 8 , 9]
 # J_grid = [1, 2, 3]
-J_grid = [1, 2, 3, 4, 5, 10, 15]
+# J_grid = [1, 2, 3, 4, 5, 10, 15]
 # ending_time_grid = [12, 13, 14, 15]
 # ending_time_grid = [7, 8, 9, 10, 11]
-
+J_grid = [4]
 
 """ Import data
 """
@@ -400,7 +400,7 @@ for J in J_grid:
     for t in group_by_t_w_q.keys():
         group_by_t_w_q[t] = sorted(group_by_t_w_q[t], key = lambda x: x[1], reverse = True)
     
-    largest_num = 6
+    largest_num = 10
     
     group_by_t_largest = {}
     for t in group_by_t_w_q.keys():
@@ -485,6 +485,8 @@ for J in J_grid:
     x_val = {}
     z_recov_val = {}
     finite_diff_val = {}
+    z_best = {}
+    ub_log = {}
     
     start_time = time.time()
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
@@ -611,8 +613,11 @@ for J in J_grid:
         # print('f(Z) equals to', f_Z_2)
         # print('f(Z) equals to', f_Z_5)
         
+        ub_log[counter] = f_Z
+        
         if f_Z < Xi_ub:
-            Xi_ub = f_Z   
+            Xi_ub = f_Z
+            z_best = Z_param.copy()
         if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
             break
         
@@ -945,8 +950,24 @@ for J in J_grid:
     for sol in final_sol:
         if int(sol[2]) != sol[2]:
             frac_solution = True
+            break
+    
+    # log best ub solution
+    is_best_ub_frac = False
+    best_ub_sol = []
+    
+    for t in T:
+        for c in C:
+            if z_best[c, t] != 0:
+                best_ub_sol.append((c, t, round(z_best[c,t], 2)))
+    for sol in best_ub_sol:
+        if int(sol[2]) != sol[2]:
+             is_best_ub_frac = True
+             break
+         
     time_log[J] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
-                             'opt_sol': final_sol, 'largest_num': largest_num}
+                   'opt_sol': final_sol, 'largest_num': largest_num, 'best_ub_sol': best_ub_sol,
+                   'is_best_ub_frac': is_best_ub_frac, 'ub_log': ub_log}
     
 print(time_log)
 with open('time_log_T9.txt', 'w') as log_result:
