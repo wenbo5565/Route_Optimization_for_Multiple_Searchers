@@ -489,6 +489,7 @@ for grid_size in grid_size_grid:
     x_val = {}
     z_recov_val = {}
     finite_diff_val = {}
+    ub_log = {}
     
     start_time = time.time()
     # while abs(Xi_ub - Xi_lb) > delta * Xi_lb: #and counter <= 100:
@@ -614,9 +615,11 @@ for grid_size in grid_size_grid:
         print('f(Z) equals to', f_Z)
         # print('f(Z) equals to', f_Z_2)
         # print('f(Z) equals to', f_Z_5)
+        ub_log[counter] = f_Z
         
         if f_Z < Xi_ub:
-            Xi_ub = f_Z   
+            Xi_ub = f_Z
+            z_best = Z_param.copy()
         if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
             break
         
@@ -949,8 +952,23 @@ for grid_size in grid_size_grid:
     for sol in final_sol:
         if int(sol[2]) != sol[2]:
             frac_solution = True
-    time_log[grid_size] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
-                             'opt_sol': final_sol, 'largest_num': largest_num}
+            break
+    # log best ub solution
+    is_best_ub_frac = False
+    best_ub_sol = []
+    
+    for t in T:
+        for c in C:
+            if z_best[c, t] != 0:
+                best_ub_sol.append((c, t, round(z_best[c,t], 2)))
+    for sol in best_ub_sol:
+        if int(sol[2]) != sol[2]:
+             is_best_ub_frac = True
+             break
+         
+    time_log[J] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
+                   'opt_sol': final_sol, 'largest_num': largest_num, 'best_ub_sol': best_ub_sol,
+                   'is_best_ub_frac': is_best_ub_frac, 'ub_log': ub_log}
     
 print(time_log)
 with open('time_log_T9.txt', 'w') as log_result:
