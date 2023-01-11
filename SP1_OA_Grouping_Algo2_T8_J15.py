@@ -963,7 +963,7 @@ for ending_time in ending_time_grid:
              is_best_ub_frac = True
              break
          
-    time_log[J] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
+    time_log[ending_time] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb, 'frac_sol': frac_solution,
                    'opt_sol': final_sol, 'largest_num': largest_num, 'best_ub_sol': best_ub_sol,
                    'is_best_ub_frac': is_best_ub_frac, 'ub_log': ub_log}
     
