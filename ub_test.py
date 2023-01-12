@@ -11,7 +11,7 @@ import platform
 
 grid_size = 9
 # ending_time_grid = range(7, 16)
-ending_time_grid = [13]
+ending_time_grid = [15]
 # num_scenario = 1000
 
 
