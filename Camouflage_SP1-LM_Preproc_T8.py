@@ -24,6 +24,31 @@ def is_nearby_cell(c, c_prime):
             return True
     else:
         return False
+    
+def is_reverse_state(s_prime, s):
+    """
+        Function to check if s_prime is a reverse (R) state of s
+    """
+    c, cam = s
+    c_prime, cam_prime = s_prime
+    if cam == 1: # current state is a camouflage state
+        if c == c_prime:
+            return True
+    elif cam == 0: # current state is a non-camouflage state
+        if cam_prime == 1 and c == c_prime: # case when it switches from camouflage to non camouflage
+            return True
+        elif cam_prime == 0 and is_nearby_cell(c, c_prime): # case when it only changes cell but not camouflage state
+            return True
+    else:
+        return False
+    
+def is_forward_state(s, s_prime):
+    """
+        Function to check if s_prime is a forward (F) state of s
+    """
+    # This is equivalent to say if s is a reverse state of s_prime
+    return is_reverse_state(s, s_prime)
+        
 
 def is_corner_cell(c, grid_size):
     if c[0] == 1 and c[1] == 1:
@@ -317,36 +342,43 @@ for ending_time in ending_time_grid:
     """
     Defining decision variables
     """
-    sub_X = list(product(L, S_searcher, S_searcher, T0))
-    sub_ct = list(product(S, T)) # P and W is indexed by sub_ct
+    sub_l_ss_ss_t0 = list(product(L, S_searcher, S_searcher, T0))
+    sub_s_t = list(product(S, T)) # P and W is indexed by sub_ct
     
-    sub_ctj = []
+    sub_l_s_t_jl = []
     for l in L:
-        sub_ctj = sub_ctj + list(product([l], S, T, range(1, n_L[l] + 1))) # Q is indexed by sub_ctj
+        sub_l_s_t_jl = sub_l_s_t_jl + list(product([l], S, T, range(1, n_L[l] + 1))) # Q is indexed by sub_ctj
     
     
+    sub_redu_s_t = list(product(S, T))
+    sub_redu_s_t = [each for each in sub_redu_s_t if w_param[each] == 1] # reduced s t pair
     
-    sub_zset = list(product(S, T))
-    sub_zset = [each for each in sub_zset if w_param[each] == 1]
+    # below is ss_t
+    sub_redu_ss_t = [each for each in sub_redu_s_t if each[0][1] == 0] # reduced s t pair but removing case with camouflage = 1
     
-    sub_zset_j = []
+    sub_l_ss_t_jl = []
     for l in L:
-        sub_zset_j = sub_zset_j + list(product([l], S_searcher, T, J_l[l])) # used by V
+        sub_l_ss_t_jl = sub_l_ss_t_jl + list(product([l], S_searcher, T, J_l[l])) # used by V
     
     
-    X = m.addVars(sub_X, lb = 0, name = 'X') # related to searcher; should be indexed by S_searcher
+    X = m.addVars(sub_l_ss_ss_t0, lb = 0, name = 'X') # related to searcher; should be indexed by S_searcher
     # Z = m.addVars(sub_ct, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     # U = m.addVars(Omega, lb = 0, name = 'U')
-    P = m.addVars(sub_ct, lb = 0, name = 'P') # prob that the target is in states in period t and was not detected prior to t
-    Q = m.addVars(sub_ctj, lb = 0, name = 'Q') # auxiliary variable related to P and alpha
+    P = m.addVars(sub_redu_s_t, lb = 0, name = 'P') # prob that the target is in states in period t and was not detected prior to t
+    W = m.addVars(sub_redu_s_t, lb = 0, name = 'W') # auxiliary variable related to P and alpha
+
+    Q = m.addVars(sub_l_s_t_jl, lb = 0, name = 'Q') # auxiliary variable related to P and alpha
     # V = m.addVars(sub_ctj, vtype = GRB.BINARY, name = 'V')
-    V = m.addVars(sub_zset_j, vtype = GRB.BINARY, name = 'V') # = 1 if J_l searchers of class l in state s in period t
-    W = m.addVars(sub_ct, lb = 0, name = 'W') # auxiliary variable related to P and alpha
+    V = m.addVars(sub_l_s_t_jl, vtype = GRB.BINARY, name = 'V') # = 1 if J_l searchers of class l in state s in period t
+    for (l, s, t, jl) in sub_l_s_t_jl:
+        if s[1] == 1:
+            V[l, s, t, jl].ub = 0
+            V[l, s, t, jl].lb = 0
     
     """
     Defining objective function
     """
-    m.setObjective(1 - sum(Q[c, t, j] for t in T for c in C for j in J_set), GRB.MINIMIZE)    
+    m.setObjective(1 - sum(Q[l, s, t, jl] for (l, s, t, jl) in sub_l_s_t_jl if (s, t) in sub_redu_s_t), GRB.MINIMIZE)    
     
     """
     Defining constraints
@@ -380,23 +412,50 @@ for ending_time in ending_time_grid:
     # =============================================================================
         
     # m.addConstrs((Q[c, t, j] <= q[c, t] * (1 - np.exp(-j * alpha[c, t])) * V[c, t, j] for c in C for t in T for j in J_set), name = '23')
-    m.addConstrs((Q[reduce_ct[0], reduce_ct[1], j] <= q[reduce_ct[0], reduce_ct[1]] * (1 - np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]])) * V[(reduce_ct[0], reduce_ct[1]), j] for reduce_ct in sub_zset for j in J_set), name = '23')
-
     
-    m.addConstrs((Q[c, t, j] <= (1 - np.exp(-j * alpha[c, t])) * P[c, t] for c in C for t in T for j in J_set), name = '24')
-    m.addConstrs((P[c, t + 1] == sum(gamma[c_prime, c, t] * W[c_prime, t] for c_prime in C) for c in C for t in T[:-1]), name = '25')
-    m.addConstrs((W[c, t] <= P[c, t] for c in C for t in T), name = '26')
+    # 4.3b
+    m.addConstrs((Q[l, s, t, jl] <= q[s, t] * (1 - np.exp(-jl * alpha[l, s, t])) * V[l, s, t, jl] for (l, s, t, jl) in sub_l_s_t_jl if (s, t) in sub_redu_s_t), name = '23')
+    
+    # 4.3c
+    m.addConstrs((Q[l, s, t, jl] <= (1 - np.exp(-jl * alpha[l, s, t])) * P[s, t] for (l, s, t, jl) in sub_l_s_t_jl if (s, t) in sub_redu_s_t), name = '24')
+    
+    # 4.3d
+    m.addConstrs((P[s, t + 1] == sum(gamma[s_prime, s, t] * W[s_prime, t] for s_prime in S if is_reverse_state(s_prime, s) and (s_prime, t) in sub_redu_s_t) for s in S for t in T[:-1] if (s, t + 1) in sub_redu_s_t), name = '25') # 4.3(d)
+    """ """
+    # 4.3e
+    m.addConstrs((W[s, t] <= P[s, t] for (s, t) in sub_redu_s_t), name = '26') # 4.3e
     # m.addConstrs((W[c, t] <= np.exp(-j * alpha[c, t]) * P[c, t] + q[c, t] * (1 - np.exp(-j * alpha[c, t])) * (1 - V[c, t, j]) for c in C for t in T for j in J_set), name = '27')
-    m.addConstrs((W[reduce_ct[0], reduce_ct[1]] <= np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]]) * P[reduce_ct[0], reduce_ct[1]] + q[reduce_ct[0], reduce_ct[1]] * (1 - np.exp(-j * alpha[reduce_ct[0], reduce_ct[1]])) * (1 - V[(reduce_ct[0], reduce_ct[1]), j]) for reduce_ct in sub_zset for j in J_set), name = '27')
     
-    m.addConstrs((P[c, 1] == p[c] for c in C), name = '28')
-    m.addConstrs((P[c, t] <= q[c, t] for c in C for t in T), name = '29')
-    m.addConstrs((sum(X[c_prime, reduce_ct[0], reduce_ct[1] - 1] for c_prime in C if is_nearby_cell(reduce_ct[0], c_prime)) == sum(j * V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) for reduce_ct in sub_zset), name = '30')
-    m.addConstrs((sum(V[(reduce_ct[0], reduce_ct[1]), j] for j in J_set) <= 1 for reduce_ct in sub_zset), name = '31')
+    # 4.3f
+    m.addConstrs((W[s, t] <= np.exp(-jl * alpha[l, s, t]) * P[s, t] + q[s, t] * (1 - np.exp(-jl * alpha[l, s, t])) * (1 - V[l, s, t, jl]) for (l, s, t, jl) in sub_l_s_t_jl if (s, t) in sub_redu_s_t), name = '27')
     
+    # 4.3g
+    m.addConstrs((P[s, 1] == p[s] for s in S), name = '28')
     
-    m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
-    m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c] for c in C), name = '15') #2d
+    # 4.3h
+    m.addConstrs((P[s, t] <= q[s, t] for (s, t) in sub_redu_s_t), name = '29')
+
+    # 4.3i
+    # """ check this constraint """
+    m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_searcher if is_reverse_state(s_prime, s)) == sum(j * V[l, s, t, j] for j in J_l[l]) for (s, t) in sub_redu_ss_t for l in L), name = '30')
+    
+    # 4.3j
+    m.addConstrs((sum([V[l, s, t, j] for j in J_l[l]]) <= 1 for (s, t) in sub_redu_s_t for l in L), name = '31') # 4.3j
+                    
+    
+    # """ on-going """
+    # 2.4b
+    m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_searcher if is_reverse_state(s_prime, s)) == sum(X[l, s, s_prime, t] for s_prime in S_searcher if is_forward_state(s, s_prime))  for l in L for s in S_searcher for t in T), name = '14') #2d
+    
+    # 2.4c
+    m.addConstrs((sum(X[l, s, s_prime, 0] for s_prime in S_searcher if is_nearby_cell(s[0], s_prime[0])) == xx[l, s] for l in L for s in S_searcher), name = '15') #2d
+    
+    # Please fill in these three remain constraints
+    # 2.4d
+    
+    # 2.4e
+    
+    # 2.4f
     
     """ Solving
     """
