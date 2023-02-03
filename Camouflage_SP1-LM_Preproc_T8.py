@@ -275,40 +275,73 @@ for ending_time in ending_time_grid:
     #             xx[c, t] = 0
     #             
     # =============================================================================
+    searcher_init_loc = (0, 0)
+    searcher_init_state = (searcher_init_loc, 0)
     
-    xx = {} 
-    for c in C:
-        if c == (1, 1):
-            xx[c] = J
-        else:
-            xx[c] = 0
+    xx = {} # number of searchers at t = 0
+    for l in L:
+        for s in S_searcher:
+            if s == searcher_init_state:
+                xx[l, s] = n_L[l] # set the number equal to the number of searchers of type l
+            else:
+                xx[l, s] = 0
+    
+# =============================================================================
+#     xx = {} 
+#     for c in C:
+#         if c == (1, 1):
+#             xx[c] = J
+#         else:
+#             xx[c] = 0
+# =============================================================================
+    
+# =============================================================================
+#     w_param = {}
+#     for c in C:
+#         for t in T:
+#             if q[c, t] > 0:
+#                 w_param[c, t] = 1
+#             else:
+#                 w_param[c, t] = 0
+# =============================================================================
     
     w_param = {}
-    for c in C:
+    for s in S: # this s is for the target
         for t in T:
-            if q[c, t] > 0:
-                w_param[c, t] = 1
+            if q[s, t] > 0:
+                w_param[s, t] = 1
             else:
-                w_param[c, t] = 0
-    
+                w_param[s, t] = 1 # do not reduce any pair for now
+
+
     """
     Defining decision variables
     """
-    sub_X = list(product(C, C, T0))
-    sub_ct = list(product(C, T))
-    sub_ctj = list(product(C, T, J_set))
-    sub_zset = list(product(C, T))
-    sub_zset = [each for each in sub_zset if w_param[each] == 1]
-    sub_zset_j = list(product(sub_zset, J_set))
+    sub_X = list(product(L, S_searcher, S_searcher, T0))
+    sub_ct = list(product(S, T)) # P and W is indexed by sub_ct
     
-    X = m.addVars(sub_X, lb = 0, name = 'X')
+    sub_ctj = []
+    for l in L:
+        sub_ctj = sub_ctj + list(product([l], S, T, range(1, n_L[l] + 1))) # Q is indexed by sub_ctj
+    
+    
+    
+    sub_zset = list(product(S, T))
+    sub_zset = [each for each in sub_zset if w_param[each] == 1]
+    
+    sub_zset_j = []
+    for l in L:
+        sub_zset_j = sub_zset_j + list(product([l], S_searcher, T, J_l[l])) # used by V
+    
+    
+    X = m.addVars(sub_X, lb = 0, name = 'X') # related to searcher; should be indexed by S_searcher
     # Z = m.addVars(sub_ct, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     # U = m.addVars(Omega, lb = 0, name = 'U')
-    P = m.addVars(sub_ct, lb = 0, name = 'P')
-    Q = m.addVars(sub_ctj, lb = 0, name = 'Q')
+    P = m.addVars(sub_ct, lb = 0, name = 'P') # prob that the target is in states in period t and was not detected prior to t
+    Q = m.addVars(sub_ctj, lb = 0, name = 'Q') # auxiliary variable related to P and alpha
     # V = m.addVars(sub_ctj, vtype = GRB.BINARY, name = 'V')
-    V = m.addVars(sub_zset_j, vtype = GRB.BINARY, name = 'V')
-    W = m.addVars(sub_ct, lb = 0, name = 'W')
+    V = m.addVars(sub_zset_j, vtype = GRB.BINARY, name = 'V') # = 1 if J_l searchers of class l in state s in period t
+    W = m.addVars(sub_ct, lb = 0, name = 'W') # auxiliary variable related to P and alpha
     
     """
     Defining objective function
