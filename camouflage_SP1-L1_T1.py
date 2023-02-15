@@ -75,9 +75,9 @@ def is_forward_state(s, s_prime):
     return is_reverse_state(s, s_prime)
 
 
-ending_time_grid = list(range(7, 16))
+# ending_time_grid = list(range(7, 16))
+ending_time_grid = list(range(7, 8))
 
-ending_time = 7
 for ending_time in ending_time_grid:
     print('===========================')
     print('ending time is', ending_time)
@@ -85,7 +85,7 @@ for ending_time in ending_time_grid:
 
     grid_size = 9
     ending_time = ending_time
-    num_scenario = 500
+    num_scenario = 1000
     
     """
     Creating set
@@ -208,9 +208,10 @@ for ending_time in ending_time_grid:
     n = {} # number of seachers per state per time
     for s in S:
         for t in T:
-            n[s, t] = 2
+            n[s, t] = 3
             
-    N = sum(n.values())
+    # N = sum(n.values())
+    N = sum(n_L.values()) * ending_time
     
     """
     Creating parameters
@@ -252,13 +253,16 @@ for ending_time in ending_time_grid:
     
     """ check this constraint """
     """ constraint 3.1 """
+    print("**************** Adding the cut **************************")
     m.addConstrs((np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) 
                   - np.exp(-i * alpha) * (1 - np.exp(-alpha)) * sum(Zeta[s, t, omega_num] * Z[l, s, t] for l in L for s in S for t in T) 
                   <= U[omega_num] for omega_num in Omega_num for i in range(1, N + 1)), name = 'cut') #2d
+    
+    print("**************** End *************************************")
     # m.addConstrs((coef_scale * np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) + coef_scale * np.exp(-i * alpha) * (np.exp(-alpha) - 1) * sum(Z_New[sub] for sub in sub_WW if Zeta[sub[0], sub[1], omega] == 1) <= coef_scale * U[omega] for omega in Omega for i in I), name = '19') #2d
     
     # 2.4b
-    
+
     m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S if is_nearby_cell(s, s_prime)) == sum(X[l, s, s_prime, t] for s_prime in S if is_nearby_cell(s, s_prime))  for l in L for s in S for t in T), name = 'continum') #2d
     
     # 2.4c
@@ -285,7 +289,7 @@ for ending_time in ending_time_grid:
     # m.addConstrs((sum(X[c_prime, sub[0], sub[1] - 1] for c_prime in C if is_nearby_cell(sub[0], c_prime)) == Z_New[sub] for sub in sub_WW), name = '16') #2d
     
     # 2.5c
-    m.addConstrs((sum(Z[l, s, t] for s in S) <= n[s, t] for l in L for s in S for t in T), name = 'capacity') #2d
+    m.addConstrs((sum(Z[l, s, t] for l in L) <= n[s, t] for s in S for t in T), name = 'loc_capacity') #2d
 
     
     # 2.5d
@@ -306,4 +310,12 @@ for ending_time in ending_time_grid:
 #         if value.X != 0:
 #             print(key, value.X)
 # =============================================================================
-
+    print("********** optimal solution for Z **********")    
+    for sub in sub_Z:
+        if Z[sub].X != 0:
+            print(sub, Z[sub].X)
+    
+    print('********** optimal solution for O **********')
+    for sub in sub_O:
+        if O[sub].X != 0:
+            print(sub, O[sub].X)
