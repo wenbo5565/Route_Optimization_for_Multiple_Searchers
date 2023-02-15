@@ -103,7 +103,7 @@ for ending_time in ending_time_grid:
     total_J = sum(n_L.values())
     searcher_init = {1: (1, 1), 2: (grid_size, 1)} # searcher type 1 starts from 1,1 # searcher type 2 starts from last row, left-most column
     
-    tau = {1: 8, 2: 7} # operation duration limit for searcher of type l
+    tau = {1: 5, 2: 5} # operation duration limit for searcher of type l
     """ taking-off states """
 # =============================================================================
 #     S_plus = {}
