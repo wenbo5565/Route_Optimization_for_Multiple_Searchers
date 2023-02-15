@@ -96,14 +96,14 @@ for ending_time in ending_time_grid:
     T0 = [0] + T # time period add t0
     Omega_num = list(range(1, num_scenario + 1)) # numerical list with each element represent a path number
     L = [1, 2] # set of searchers' type
-    n_L = {1: 2, 2: 1} # number of searchers for each searcher type
+    n_L = {1: 1, 2: 2} # number of searchers for each searcher type
     alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
     # I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     total_J = sum(n_L.values())
-    searcher_init = {1: (1, 1), 2: (grid_size, 1)} # searcher type 1 starts from 1,1 # searcher type 2 starts from last row, left-most column
+    searcher_init = {1: (1, 1), 2: (3, 1)} # searcher type 1 starts from 1,1 # searcher type 2 starts from last row, left-most column
     
-    tau = {1: 5, 2: 5} # operation duration limit for searcher of type l
+    tau = {1: 3, 2: 4} # operation duration limit for searcher of type l
     """ taking-off states """
 # =============================================================================
 #     S_plus = {}
