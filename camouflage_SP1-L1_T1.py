@@ -281,7 +281,7 @@ for ending_time in ending_time_grid:
     m.addConstrs((sum(X[l, s, s_prime, t] for s in [searcher_init[l]] for s_prime in S  if is_nearby_cell(s, s_prime)) == O[l, t] for l in L for t in T), name = 'duration_start') #2d
 
     # 2.4f
-    m.addConstrs((sum(X[l, s, s_prime, t] for s in [searcher_init[l]] for s_prime in S if is_nearby_cell(s, s_prime))  <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
+    m.addConstrs((sum(X[l, s, s_prime, t] for s in S for s_prime in S if s not in [searcher_init[l]] and is_nearby_cell(s, s_prime))  <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
 
     
     # 2.5b
