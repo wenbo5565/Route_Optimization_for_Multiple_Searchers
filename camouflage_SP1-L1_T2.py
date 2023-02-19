@@ -177,7 +177,7 @@ def is_forward_state(s, s_prime):
 
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = list(range(7, 16))
-ending_time_grid = list(range(7, 8))
+ending_time_grid = list(range(7, 16))
 
 for ending_time in ending_time_grid:
     print('===========================')
