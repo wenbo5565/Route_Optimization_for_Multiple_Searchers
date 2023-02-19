@@ -176,7 +176,7 @@ def is_forward_state(s, s_prime):
 
 
 # ending_time_grid = list(range(7, 16))
-ending_time_grid = list(range(7, 8))
+ending_time_grid = list(range(7, 16))
 
 
 for ending_time in ending_time_grid:
@@ -198,7 +198,7 @@ for ending_time in ending_time_grid:
     Omega_num = list(range(1, num_scenario + 1)) # numerical list with each element represent a path number
     L = [1, 2] # set of searchers' type
     # L = [1]
-    n_L = {1: 1, 2: 2} # number of searchers for each searcher type
+    n_L = {1: 1, 2: 1} # number of searchers for each searcher type
     # n_L = {1: 1}
     # alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
     # I = list(range(0, J * ending_time + 1))
@@ -214,7 +214,7 @@ for ending_time in ending_time_grid:
     
     S_expand = S + [s_init] + [s_end]
     
-    tau = {1: ending_time * 0.5, 2: ending_time * 0.7} # operation duration limit for searcher of type l
+    tau = {1: ending_time * 0.8, 2: ending_time * 0.6} # operation duration limit for searcher of type l
     """ taking-off states """
 # =============================================================================
 #     S_plus = {}
@@ -330,7 +330,7 @@ for ending_time in ending_time_grid:
     n = {} # number of seachers per state per time
     for s in S_expand:
         for t in T:
-            n[s, t] = 2
+            n[s, t] = total_J
             
     # N = sum(n.values())
     N = sum(n_L.values()) * ending_time
@@ -511,7 +511,13 @@ for ending_time in ending_time_grid:
 #         if X[sub].X != 0:
 #             print(sub, X[sub].X)
 # =============================================================================
-            
+    print("********** number of possible looks *********")
+    M = {}
+    for omega_num in Omega_num:
+        M[omega_num] = sum(Zeta[s, t, omega_num] * Z[l, s, t] for l in L for s in S for t in T)
+    print('M by path is', M)
+    print('M total is', sum(M.values()))
+    
     
     print('********** optimal solution for O **********')
     sub_O = sorted(sub_O, key = lambda x: x[1])
