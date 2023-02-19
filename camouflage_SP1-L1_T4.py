@@ -189,7 +189,7 @@ for grid_size in grid_size_sets:
     print('===========================')
 
     grid_size = grid_size
-    ending_time = 10
+    ending_time = 9
     num_scenario = 1000
     
     """
