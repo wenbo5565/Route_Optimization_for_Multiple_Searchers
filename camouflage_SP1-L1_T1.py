@@ -14,41 +14,141 @@ import ast
 Define helper functions
 """
 
-def is_nearby_cell(c, c_prime):
-    if c == c_prime:
-        return True
-    elif c[0] == c_prime[0]:
-        if c[1] + 1 == c_prime[1] or c[1] - 1 == c_prime[1]:
-            return True
-    elif c[1] == c_prime[1]:
-        if c[0] + 1 == c_prime[0] or c[0] - 1 == c_prime[0]:
-            return True
-    else:
-        return False
-
-def is_forward_cell(c, c_next):
-    if c == c_next:
-        return True
-    elif c[0] == c_next[0]:
-        if c[1] + 1 == c_next[1] or c[1] - 1 == c_next[1]:
-            return True
-    elif c[1] == c_next[1]:
-        if c[0] + 1 == c_next[0] or c[0] - 1 == c_next[0]:
-            return True
-    else:
-        return False
+def is_forward_cell(c_0, c_1, 
+                    starting_c = (-100, -100), ending_c = (-100, 100),
+                    on_map_start = (1, 1), on_map_end = (1, 5)):
+    """ function to check if c_1 is a forward cell for c_0 """ 
     
-def is_reverse_cell(c, c_last):
-    if c == c_last:
-        return True
-    elif c[0] == c_last[0]:
-        if c[1] + 1 == c_last[1] or c[1] - 1 == c_last[1]:
+    """ add special condition for starting state """
+    if c_0 == on_map_end: # add additional ending_c
+        if c_1 == ending_c:
             return True
-    elif c[1] == c_last[1]:
-        if c[0] + 1 == c_last[0] or c[0] - 1 == c_last[0]:
+        elif c_0 == c_1:
             return True
+        elif c_0[0] == c_1[0]:
+            if c_0[1] + 1 == c_1[1] or c_0[1] - 1 == c_1[1]:
+                return True
+        elif c_0[1] == c_1[1]:
+            if c_0[0] + 1 == c_1[0] or c_0[0] - 1 == c_1[0]:
+                return True
+        else:
+            return False
+    elif c_0 == starting_c: # only itself and on_map_start
+        if c_1 == on_map_start or c_1 == starting_c: # the first cell has to be (1, 1)
+            return True
+        else:
+            return False
+    elif c_0 == ending_c: # only itself
+        if c_1 == ending_c:
+            return True
+        else:
+            return False
+    else: # normall cells
+        if c_0 == c_1:
+            return True
+        elif c_0[0] == c_1[0]:
+            if c_0[1] + 1 == c_1[1] or c_0[1] - 1 == c_1[1]:
+                return True
+        elif c_0[1] == c_1[1]:
+            if c_0[0] + 1 == c_1[0] or c_0[0] - 1 == c_1[0]:
+                return True
+        else:
+            return False
+        
+def is_backward_cell(c_0, c_1, 
+                     starting_c = (-100, -100), ending_c = (-100, 100),
+                     on_map_start = (1, 1), on_map_end = (1, 5)):
+    """ function to check if c_0 is a backward cell for c_1 """ 
+    
+    """ add special condition for starting state """
+    if c_1 == on_map_start:
+        if c_0 == starting_c: # add starting_c as the backward
+            return True
+        if c_0 == c_1:
+            return True
+        elif c_0[0] == c_1[0]:
+            if c_0[1] + 1 == c_1[1] or c_0[1] - 1 == c_1[1]:
+                return True
+        elif c_0[1] == c_1[1]:
+            if c_0[0] + 1 == c_1[0] or c_0[0] - 1 == c_1[0]:
+                return True
+        return False           
+    elif c_1 == ending_c: # the backward state of the ending cell is the (1, 5)
+        if c_0 == ending_c:
+            return True
+        elif c_0 == on_map_end:
+            return True
+        else:
+            return False
+    elif c_1 == starting_c: # off map starting, only itself is the backward 
+        if c_0 == starting_c:
+            return True
+        else:
+            return False        
     else:
-        return False
+        if c_0 == c_1:
+            return True
+        elif c_0[0] == c_1[0]:
+            if c_0[1] + 1 == c_1[1] or c_0[1] - 1 == c_1[1]:
+                return True
+        elif c_0[1] == c_1[1]:
+            if c_0[0] + 1 == c_1[0] or c_0[0] - 1 == c_1[0]:
+                return True
+        else:
+            return False        
+
+
+
+
+def is_nearby_cell(c, c_prime, starting_c = (0, 0), ending_c = (0, 5)):
+    """ add special condition for starting state """
+    if c == starting_c:
+        if c_prime[1] == 1: # all states in the first column are nearby states for the starting cell
+            return True
+        else:
+            return False
+    elif c == ending_c: # the nearby state of the ending cell is the ending cell itself
+        if c_prime == c:
+            return True
+        else:
+            return False
+    else:
+        if c == c_prime:
+            return True
+        elif c[0] == c_prime[0]:
+            if c[1] + 1 == c_prime[1] or c[1] - 1 == c_prime[1]:
+                return True
+        elif c[1] == c_prime[1]:
+            if c[0] + 1 == c_prime[0] or c[0] - 1 == c_prime[0]:
+                return True
+        else:
+            return False
+
+# =============================================================================
+# def is_forward_cell(c, c_next):
+#     if c == c_next:
+#         return True
+#     elif c[0] == c_next[0]:
+#         if c[1] + 1 == c_next[1] or c[1] - 1 == c_next[1]:
+#             return True
+#     elif c[1] == c_next[1]:
+#         if c[0] + 1 == c_next[0] or c[0] - 1 == c_next[0]:
+#             return True
+#     else:
+#         return False
+#     
+# def is_reverse_cell(c, c_last):
+#     if c == c_last:
+#         return True
+#     elif c[0] == c_last[0]:
+#         if c[1] + 1 == c_last[1] or c[1] - 1 == c_last[1]:
+#             return True
+#     elif c[1] == c_last[1]:
+#         if c[0] + 1 == c_last[0] or c[0] - 1 == c_last[0]:
+#             return True
+#     else:
+#         return False
+# =============================================================================
 
 def is_reverse_state(s_prime, s):
     """
@@ -76,7 +176,8 @@ def is_forward_state(s, s_prime):
 
 
 # ending_time_grid = list(range(7, 16))
-ending_time_grid = list(range(7, 8))
+ending_time_grid = list(range(7, 15))
+
 
 for ending_time in ending_time_grid:
     print('===========================')
@@ -96,14 +197,24 @@ for ending_time in ending_time_grid:
     T0 = [0] + T # time period add t0
     Omega_num = list(range(1, num_scenario + 1)) # numerical list with each element represent a path number
     L = [1, 2] # set of searchers' type
-    n_L = {1: 1, 2: 2} # number of searchers for each searcher type
-    alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
+    # L = [1]
+    n_L = {1: 1, 2: 1} # number of searchers for each searcher type
+    # n_L = {1: 1}
+    # alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
     # I = list(range(0, J * ending_time + 1))
     # print('i is', I)
     total_J = sum(n_L.values())
-    searcher_init = {1: (1, 1), 2: (3, 1)} # searcher type 1 starts from 1,1 # searcher type 2 starts from last row, left-most column
     
-    tau = {1: 3, 2: 4} # operation duration limit for searcher of type l
+    s_init = (-100, -100)
+    s_end = (-100, 100)
+    on_map_init = (grid_size // 2, 1)
+    on_map_end = (grid_size, grid_size // 2)
+    
+    # searcher_init = {1: (1, 1), 2: (3, 1)} # searcher type 1 starts from 1,1 # searcher type 2 starts from last row, left-most column
+    
+    S_expand = S + [s_init] + [s_end]
+    
+    tau = {1: ending_time * 0.8, 2: ending_time} # operation duration limit for searcher of type l
     """ taking-off states """
 # =============================================================================
 #     S_plus = {}
@@ -128,17 +239,27 @@ for ending_time in ending_time_grid:
 # =============================================================================
 #     S = S + S_plus + S_minus + s_term
 # =============================================================================
-    
-
 
     x = {}
     for l in L:
-        for s in S:
+        for s in S_expand:
             for t in T0:
-                if s in searcher_init[l] and t == 0:
-                    x[s, t] = n_L[l]
+                if s in [s_init] and t == 0:
+                    x[l, s, t] = n_L[l]
                 else:
-                    x[s, t] = 0
+                    x[l, s, t] = 0
+    
+    """ debug """
+# =============================================================================
+#     for l in L:
+#         for t in T0:
+#             for s in S_expand:
+#                 if x[l, s, t] != 0:
+#                     print(l, s, t, x[l, s, t])
+# =============================================================================
+    """ end of debug """
+    
+    
         
 
     """ Import data
@@ -156,7 +277,7 @@ for ending_time in ending_time_grid:
     Zeta = {}
     for path in range(1, zeta_raw.shape[0] + 1):
         for t in range(1, ending_time + 1):
-            all_states = S
+            all_states = S # not use S expand because this is for searcher
             for state in all_states:
                 Zeta[(state, t, path)] = 0 # set Zeta equal to 0
             # cell_one_dim = zeta_raw.loc[path, 3 * (t - 1) + 1] # extract the occupied cell loc from Zeyu's path
@@ -203,12 +324,13 @@ for ending_time in ending_time_grid:
     m.setParam(GRB.Param.TimeLimit, 15 * 60)
     m.setParam(GRB.Param.Threads, 1)
     m.setParam(GRB.Param.LogFile, model_name)
+    # m.setParam(GRB.Param.MIPGap, 1e-4)
     # m.setParam(GRB.Param.NumericFocus,1)
     
     n = {} # number of seachers per state per time
-    for s in S:
+    for s in S_expand:
         for t in T:
-            n[s, t] = 3
+            n[s, t] = 2
             
     # N = sum(n.values())
     N = sum(n_L.values()) * ending_time
@@ -220,7 +342,7 @@ for ending_time in ending_time_grid:
     q = np.random.uniform(low = 0, high = 1, size = num_scenario)
     q = q / sum(q) # normalize to a probablity distribution summing up to 1
     q = dict(zip(Omega_num, q))
-    alpha = -3 * np.log(0.4) / 3
+    alpha = -3 * np.log(0.4) / total_J
     
     # =============================================================================
     # q = pd.read_csv(data_folder + 'q.csv')
@@ -230,8 +352,8 @@ for ending_time in ending_time_grid:
     """
     Defining decision variables
     """
-    sub_X = list(product(L, S, S, T0))
-    sub_Z = list(product(L, S, T))
+    sub_X = list(product(L, S_expand, S_expand, T0))
+    sub_Z = list(product(L, S_expand, T))
     sub_O = list(product(L, T))
     # sub_WW = list(product(S, T))
     # sub_WW = [each for each in sub_WW if W[each] == 1]
@@ -241,6 +363,15 @@ for ending_time in ending_time_grid:
     # Z_New = m.addVars(sub_WW, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     U = m.addVars(Omega_num, lb = 0, name = 'U')
     O = m.addVars(sub_O, lb = 0, name = 'O')
+    
+# =============================================================================
+#     test_state = (1, 1)
+#     test_time = [t for t in range(1, 8)]
+#     # for t in test_time:
+#     Z[l, test_state, 1].ub = 1
+#     Z[l, test_state, 1].lb = 1
+# =============================================================================
+
     
     """
     Defining objective function
@@ -263,37 +394,94 @@ for ending_time in ending_time_grid:
     
     # 2.4b
 
-    m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S if is_nearby_cell(s, s_prime)) == sum(X[l, s, s_prime, t] for s_prime in S if is_nearby_cell(s, s_prime))  for l in L for s in S for t in T), name = 'continum') #2d
+    m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
+                  == sum(X[l, s, s_prime, t] for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))  for l in L for s in S_expand for t in T), name = 'continum') #2d
     
+    # m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end)) == sum(X[l, s, s_prime, t] for s_prime in S if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end))  for l in L for s in (S + s_init) for t in T), name = 'continum') #2d
+
+    # m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end)) == sum(X[l, s, s_prime, t] for s_prime in S if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end))  for l in L for s in S for t in T), name = 'continum') #2d
+
+
     # 2.4c
     """
     For this specific constraint, s is the default starting state at t = 0, which is defined by the number of searchers
     through xx[l, s, 0]. And s_prime (which is where the searchers could be at t = 1) need to be defined in a separate
     way from the general is_nearby_cell function
     """
-    m.addConstrs((sum(X[l, s, s_prime, 0] for s_prime in S if is_nearby_cell(s, s_prime)) == x[s, 0] for s in S), name = 'continum_start') #2d
+    m.addConstrs((sum(X[l, s, s_prime, 0] for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
+                  == x[l, s, 0] for l in L for s in S_expand), name = 'continum_start') #2d
+    
+# =============================================================================
+#     for s in S_expand:
+#         if x[1, s, 0] == 1:
+#                 # print(1, s, 0, x[1, s, 0])
+#                 # print('s is', s, 's_prime is', s_prime)
+#             print(s)
+#             for s_prime in S_expand:
+#                 if X[1, s, s_prime, 0].X == 1 and is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end):
+#                     print(1, s, s_prime, 0, X[1, s, s_prime, 0].X)  
+#                 
+#     for s in S_expand:
+#         if x[1, s, 0] != 0:
+#             print(1, s, 0, x[1, s, 0])
+#     
+#     for s in S_expand:
+#         for s_prime in S_expand:
+#             if X[1, s, s_prime, 0].X != 0:
+#                 print(1, s, s_prime, 0, ':', X[1, s, s_prime, 0].X)
+# =============================================================================
+    # m.addConstrs((sum(X[l, s, s_prime, 0] for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end)) == x[l, s, 0] for l in L for s in S), name = 'continum_start') #2d
+
+    # m.addConstrs((sum(X[l, s, s_prime, 0] for s_prime in S if s == s_prime) == x[l, s, 0] for l in L for s in S), name = 'continum_start') #2d
+
     
     # 2.4e
     """ 
     this s can only be at the searcher's init position 
     
     """
-    m.addConstrs((sum(X[l, s, s_prime, t] for s in [searcher_init[l]] for s_prime in S  if is_nearby_cell(s, s_prime)) == O[l, t] for l in L for t in T), name = 'duration_start') #2d
+    m.addConstrs((sum(X[l, s, s_prime, t - 1] for s in [s_init] for s_prime in S_expand if s_prime != s and is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
+                  == O[l, t] for l in L for t in T), name = 'duration_start') #2d
 
     # 2.4f
-    m.addConstrs((sum(X[l, s, s_prime, t] for s in S for s_prime in S if s not in [searcher_init[l]] and is_nearby_cell(s, s_prime))  <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
+    """ should we consider those move off the map next time period """
+    m.addConstrs((sum(X[l, s, s_prime, t] for s in S for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end)) 
+                  <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
 
     
     # 2.5b
-    m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S if is_nearby_cell(s, s_prime)) == Z[l, s, t] for l in L for s in S for t in T), name = 'link_x_z') #2d
+    m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
+                  == Z[l, s, t] for l in L for s in S_expand for t in T), name = 'link_x_z') #2d
+    
+# =============================================================================
+#     for s in S_expand:
+#         for s_prime in S_expand:
+#             if X[1, s_prime, s, 0].X != 0:
+#                 print(1, s_prime, s, 0, ':', X[1, s_prime, s, 0].X)
+#     
+#     Z[1, (1, 1), 1].X
+#     
+#     for s_prime in S_expand:
+#         if is_backward_cell(s_prime, (1, 1), starting_c = s_init, ending_c = s_end,
+#                             on_map_start = on_map_init, on_map_end = on_map_end):
+#             print('backward', s_prime)
+#         if is_backward_cell(s_prime, (1, 1), starting_c = s_init, ending_c = s_end,
+#                             on_map_start = on_map_init, on_map_end = on_map_end):
+#             print(s_prime, (1, 1), X[1, s_prime, (1, 1), 0].X) 
+#     
+#     for s in S_expand:
+#         if Z[1, s, 1].X != 0:
+#             print(l, s, 1, ':', Z[l, s, 1].X)
+# =============================================================================
+    
     # m.addConstrs((sum(X[c_prime, sub[0], sub[1] - 1] for c_prime in C if is_nearby_cell(sub[0], c_prime)) == Z_New[sub] for sub in sub_WW), name = '16') #2d
     
     # 2.5c
-    m.addConstrs((sum(Z[l, s, t] for l in L) <= n[s, t] for s in S for t in T), name = 'loc_capacity') #2d
+    m.addConstrs((sum(Z[l, s, t] for l in L) <= n[s, t] for s in S_expand for t in T), name = 'loc_capacity') #2d
 
     
     # 2.5d
-    m.addConstrs((Z[l, s, t] <= min(n[s, t], n_L[l]) for l in L for s in S for t in T), name = 'capacity') #2d
+    m.addConstrs((Z[l, s, t] <= min(n[s, t], n_L[l]) for l in L for s in S_expand for t in T), name = 'capacity') #2d
 
     
     """ Solving
@@ -310,12 +498,23 @@ for ending_time in ending_time_grid:
 #         if value.X != 0:
 #             print(key, value.X)
 # =============================================================================
-    print("********** optimal solution for Z **********")    
+    print("********** optimal solution for Z **********")
+    sub_Z = sorted(sub_Z, key = lambda x: (x[0], x[2]))    
     for sub in sub_Z:
         if Z[sub].X != 0:
             print(sub, Z[sub].X)
+            
+# =============================================================================
+#     print("********** optimal solution for X **********")
+#     sub_X = sorted(sub_X, key = lambda x: (x[0], x[3]))    
+#     for sub in sub_X:
+#         if X[sub].X != 0:
+#             print(sub, X[sub].X)
+# =============================================================================
+            
     
     print('********** optimal solution for O **********')
+    sub_O = sorted(sub_O, key = lambda x: x[1])
     for sub in sub_O:
         if O[sub].X != 0:
             print(sub, O[sub].X)
