@@ -198,7 +198,7 @@ for ending_time in ending_time_grid:
     Omega_num = list(range(1, num_scenario + 1)) # numerical list with each element represent a path number
     L = [1, 2] # set of searchers' type
     # L = [1]
-    n_L = {1: 2, 2: 3} # number of searchers for each searcher type
+    n_L = {1: 1, 2: 3} # number of searchers for each searcher type
     # n_L = {1: 1}
     # alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
     # I = list(range(0, J * ending_time + 1))
@@ -511,6 +511,12 @@ for ending_time in ending_time_grid:
 #         if X[sub].X != 0:
 #             print(sub, X[sub].X)
 # =============================================================================
+    print("********** number of possible looks *********")
+    M = {}
+    for omega_num in Omega_num:
+        M[omega_num] = sum(Zeta[s, t, omega_num] * Z[l, s, t].X for l in L for s in S for t in T)
+    print('M by path is', M)
+    print('M total is', sum(M.values()))
     
     
     print('********** optimal solution for O **********')
