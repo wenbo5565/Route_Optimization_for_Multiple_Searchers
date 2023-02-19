@@ -514,7 +514,7 @@ for ending_time in ending_time_grid:
     print("********** number of possible looks *********")
     M = {}
     for omega_num in Omega_num:
-        M[omega_num] = sum(Zeta[s, t, omega_num] * Z[l, s, t] for l in L for s in S for t in T)
+        M[omega_num] = sum(Zeta[s, t, omega_num] * Z[l, s, t].X for l in L for s in S for t in T)
     print('M by path is', M)
     print('M total is', sum(M.values()))
     
