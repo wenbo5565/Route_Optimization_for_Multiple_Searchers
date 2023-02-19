@@ -176,8 +176,8 @@ def is_forward_state(s, s_prime):
 
 
 # ending_time_grid = list(range(7, 16))
-ending_time_grid = list(range(7, 16))
-
+# ending_time_grid = list(range(7, 16))
+ending_time_grid = list(range(7, 8))
 
 for ending_time in ending_time_grid:
     print('===========================')
@@ -342,7 +342,7 @@ for ending_time in ending_time_grid:
     q = np.random.uniform(low = 0, high = 1, size = num_scenario)
     q = q / sum(q) # normalize to a probablity distribution summing up to 1
     q = dict(zip(Omega_num, q))
-    alpha = -3 * np.log(0.4) / total_J
+    alpha = -3 * np.log(0.4) / 2
     
     # =============================================================================
     # q = pd.read_csv(data_folder + 'q.csv')
