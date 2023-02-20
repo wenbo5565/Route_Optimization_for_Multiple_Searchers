@@ -205,7 +205,7 @@ for num_1 in type_1_num:
         Omega_num = list(range(1, num_scenario + 1)) # numerical list with each element represent a path number
         L = [1, 2] # set of searchers' type
         # L = [1]
-        n_L = {1: type_1_num, 2: type_2_num} # number of searchers for each searcher type
+        n_L = {1: num_1, 2: num_2} # number of searchers for each searcher type
         # n_L = {1: 1}
         # alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
         # I = list(range(0, J * ending_time + 1))
