@@ -97,17 +97,99 @@ def is_backward_cell(c_0, c_1,
         else:
             return False        
 
-# ending_time_grid = list(range(7, 16))
-ending_time_grid = list(range(7, 16))
-ending_time= 7
 
-for ending_time in ending_time_grid:
+
+
+def is_nearby_cell(c, c_prime, starting_c = (0, 0), ending_c = (0, 5)):
+    """ add special condition for starting state """
+    if c == starting_c:
+        if c_prime[1] == 1: # all states in the first column are nearby states for the starting cell
+            return True
+        else:
+            return False
+    elif c == ending_c: # the nearby state of the ending cell is the ending cell itself
+        if c_prime == c:
+            return True
+        else:
+            return False
+    else:
+        if c == c_prime:
+            return True
+        elif c[0] == c_prime[0]:
+            if c[1] + 1 == c_prime[1] or c[1] - 1 == c_prime[1]:
+                return True
+        elif c[1] == c_prime[1]:
+            if c[0] + 1 == c_prime[0] or c[0] - 1 == c_prime[0]:
+                return True
+        else:
+            return False
+
+# =============================================================================
+# def is_forward_cell(c, c_next):
+#     if c == c_next:
+#         return True
+#     elif c[0] == c_next[0]:
+#         if c[1] + 1 == c_next[1] or c[1] - 1 == c_next[1]:
+#             return True
+#     elif c[1] == c_next[1]:
+#         if c[0] + 1 == c_next[0] or c[0] - 1 == c_next[0]:
+#             return True
+#     else:
+#         return False
+#     
+# def is_reverse_cell(c, c_last):
+#     if c == c_last:
+#         return True
+#     elif c[0] == c_last[0]:
+#         if c[1] + 1 == c_last[1] or c[1] - 1 == c_last[1]:
+#             return True
+#     elif c[1] == c_last[1]:
+#         if c[0] + 1 == c_last[0] or c[0] - 1 == c_last[0]:
+#             return True
+#     else:
+#         return False
+# =============================================================================
+
+def is_reverse_state(s_prime, s):
+    """
+        Function to check if s_prime is a reverse (R) state of s
+    """
+    c, cam = s
+    c_prime, cam_prime = s_prime
+    if cam == 1: # current state is a camouflage state
+        if c == c_prime:
+            return True
+    elif cam == 0: # current state is a non-camouflage state
+        if cam_prime == 1 and c == c_prime: # case when it switches from camouflage to non camouflage
+            return True
+        elif cam_prime == 0 and is_nearby_cell(c, c_prime): # case when it only changes cell but not camouflage state
+            return True
+    else:
+        return False
+    
+def is_forward_state(s, s_prime):
+    """
+        Function to check if s_prime is a forward (F) state of s
+    """
+    # This is equivalent to say if s is a reverse state of s_prime
+    return is_reverse_state(s, s_prime)
+
+
+# ending_time_grid = list(range(7, 16))
+# ending_time_grid = list(range(7, 16))
+# ending_time_grid = list(range(7, 16))
+J_total = [2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 50]
+
+for J in J_total:
+    J_2 = int(J * 0.7)
+    J_1 = J - J_2
     print('===========================')
-    print('ending time is', ending_time)
+    print('J total is', J)
+    print('J1 is', J_1, 'J2 is', J_2)
     print('===========================')
 
     grid_size = 9
-    ending_time = ending_time
+    ending_time = 15
     num_scenario = 1000
     
     """
@@ -120,7 +202,8 @@ for ending_time in ending_time_grid:
     Omega_num = list(range(1, num_scenario + 1)) # numerical list with each element represent a path number
     L = [1, 2] # set of searchers' type
     # L = [1]
-    n_L = {1: 1, 2: 2} # number of searchers for each searcher type
+
+    n_L = {1: J_1, 2: J_2} # number of searchers for each searcher type
     # n_L = {1: 1}
     # alpha_l = {1: 0.1, 2: 0.2} # detection rate for each searcher type
     # I = list(range(0, J * ending_time + 1))
@@ -218,17 +301,15 @@ for ending_time in ending_time_grid:
 # =============================================================================
     """ end of debugging """
     """ This is where we can set a subset to reduce c,t pair """
-    D = {}
-    for s in S:
-        for t in T:
-            if sum(Zeta[s, t, omega_num] for omega_num in Omega_num) >= 1: # if s is in cam under omega_num, Zeta = 0 due to the setup
-                D[s, t] = 1
-            else:
-                D[s, t] = 0
-                
-    for t in T:
-        D[s_init, t] = 1
-        D[s_end, t] = 1
+# =============================================================================
+#     W = {}
+#     for c in C:
+#         for t in T:
+#             if sum(Zeta[c, t, omega] for omega in Omega) >= 1:
+#                 W[c, t] = 1
+#             else:
+#                 W[c, t] = 0
+# =============================================================================
     # =============================================================================
     # Zeta = {}
     # for path in range(1, zeta_raw.shape[0] + 1):
@@ -278,7 +359,6 @@ for ending_time in ending_time_grid:
     """
     sub_X = list(product(L, S_expand, S_expand, T0))
     sub_Z = list(product(L, S_expand, T))
-    sub_Z = [each for each in sub_Z if D[each[1], each[2]] == 1]
     sub_O = list(product(L, T))
     # sub_WW = list(product(S, T))
     # sub_WW = [each for each in sub_WW if W[each] == 1]
@@ -311,7 +391,7 @@ for ending_time in ending_time_grid:
     """ constraint 3.1 """
     print("**************** Adding the cut **************************")
     m.addConstrs((np.exp(-i * alpha) * (1 + i - i * np.exp(-alpha)) 
-                  - np.exp(-i * alpha) * (1 - np.exp(-alpha)) * sum(Zeta[s, t, omega_num] * Z[l, s, t] for l in L for s in S for t in T if D[s, t] == 1) # D[s, t] is only defined in S not S_expand
+                  - np.exp(-i * alpha) * (1 - np.exp(-alpha)) * sum(Zeta[s, t, omega_num] * Z[l, s, t] for l in L for s in S for t in T) 
                   <= U[omega_num] for omega_num in Omega_num for i in range(1, N + 1)), name = 'cut') #2d
     
     print("**************** End *************************************")
@@ -374,10 +454,9 @@ for ending_time in ending_time_grid:
                   <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
 
     
-    # 3.4c
-    """ need to modify """
+    # 2.5b
     m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
-                  == Z[l, s, t] for l in L for s in S_expand for t in T if D[s, t] == 1), name = 'link_x_z') #2d
+                  == Z[l, s, t] for l in L for s in S_expand for t in T), name = 'link_x_z') #2d
     
 # =============================================================================
 #     for s in S_expand:
@@ -402,13 +481,12 @@ for ending_time in ending_time_grid:
     
     # m.addConstrs((sum(X[c_prime, sub[0], sub[1] - 1] for c_prime in C if is_nearby_cell(sub[0], c_prime)) == Z_New[sub] for sub in sub_WW), name = '16') #2d
     
-    # 3.4d
-    m.addConstrs((sum(Z[l, s, t] for l in L) <= n[s, t] for s in S_expand for t in T if D[s, t] == 1), name = 'loc_capacity') #2d
+    # 2.5c
+    m.addConstrs((sum(Z[l, s, t] for l in L) <= n[s, t] for s in S_expand for t in T), name = 'loc_capacity') #2d
 
     
-    # 3.4e
-    """ remove Z """
-    m.addConstrs((Z[l, s, t] <= min(n[s, t], n_L[l]) for l in L for s in S_expand for t in T if D[s, t] == 1), name = 'capacity') #2d
+    # 2.5d
+    m.addConstrs((Z[l, s, t] <= min(n[s, t], n_L[l]) for l in L for s in S_expand for t in T), name = 'capacity') #2d
 
     
     """ Solving
@@ -441,7 +519,7 @@ for ending_time in ending_time_grid:
     print("********** number of possible looks *********")
     M = {}
     for omega_num in Omega_num:
-        M[omega_num] = sum(Zeta[s, t, omega_num] * Z[l, s, t].X for l in L for s in S for t in T if D[s, t] == 1) 
+        M[omega_num] = sum(Zeta[s, t, omega_num] * Z[l, s, t].X for l in L for s in S for t in T)
     print('M by path is', M)
     print('M total is', sum(M.values()))
     
