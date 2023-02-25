@@ -100,7 +100,7 @@ def is_backward_cell(c_0, c_1,
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = list(range(7, 16))
 # ending_time= 7
-J_total = [2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 50]
+J_total = [10]
 
 
 for J in J_total:
@@ -271,7 +271,7 @@ for J in J_total:
     q = np.random.uniform(low = 0, high = 1, size = num_scenario)
     q = q / sum(q) # normalize to a probablity distribution summing up to 1
     q = dict(zip(Omega_num, q))
-    alpha = -3 * np.log(0.4) / 3
+    alpha = -3 * np.log(0.4) / J_total
     
     # =============================================================================
     # q = pd.read_csv(data_folder + 'q.csv')
