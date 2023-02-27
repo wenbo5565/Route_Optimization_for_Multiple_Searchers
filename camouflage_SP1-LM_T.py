@@ -533,6 +533,8 @@ for ending_time in ending_time_grid:
 #     m.addConstrs((sum(X[c, c_prime, 0] for c_prime in C if is_nearby_cell(c, c_prime)) == xx[c] for c in C), name = '15') #2d
 # =============================================================================
     
+    m.optimize()
+
     """ Solving
     """
     
@@ -553,5 +555,3 @@ for ending_time in ending_time_grid:
     for sub in sub_Q:
         if V[sub].X != 0:
             print(sub, Q[sub].X)
-    
-    m.optimize()
