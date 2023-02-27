@@ -537,7 +537,7 @@ for ending_time in ending_time_grid:
 
     """ Solving
     """
-    
+    #
     print("********** optimal solution for V **********")
     sub_V = sorted(sub_V, key = lambda x: (x[2], x[0]))    
     for sub in sub_V:
