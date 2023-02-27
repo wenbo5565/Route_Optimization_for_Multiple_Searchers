@@ -185,7 +185,7 @@ grid_size = 9
 ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time = 15
 # num_scenario = 1000
-J = 15
+J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
 
@@ -403,7 +403,7 @@ for ending_time in ending_time_grid:
     Q = m.addVars(sub_Q, lb = 0, name = 'Q')
     V = m.addVars(sub_V, vtype = GRB.BINARY, name = 'V')
     W = m.addVars(sub_W, lb = 0, name = 'W')
-    O = m.addVars(sub_O, lb = 0, name = 'O')
+    O = m.addVars(sub_O, vtype = GRB.BINARY, lb = 0, name = 'O')
     
     """
     Defining objective function
