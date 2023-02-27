@@ -182,7 +182,7 @@ def is_searcher_occ(C, T, grid_size):
     return searcher_occ
 
 grid_size = 9
-ending_time_grid = [10, 12, 14] #, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12] #, 14] #, 15, 16, 17, 18, 20]
 # ending_time = 15
 # num_scenario = 1000
 J = 3
@@ -535,4 +535,23 @@ for ending_time in ending_time_grid:
     
     """ Solving
     """
+    
+    print("********** optimal solution for V **********")
+    sub_V = sorted(sub_V, key = lambda x: (x[2], x[0]))    
+    for sub in sub_V:
+        if V[sub].X != 0:
+            print(sub, V[sub].X)
+            
+    print('********** optimal solution for O **********')
+    sub_O = sorted(sub_O, key = lambda x: x[1])
+    for sub in sub_O:
+        if O[sub].X != 0:
+            print(sub, O[sub].X)
+            
+    print("********** optimal solution for Q **********")
+    sub_Q = sorted(sub_Q, key = lambda x: (x[2], x[0]))    
+    for sub in sub_Q:
+        if V[sub].X != 0:
+            print(sub, Q[sub].X)
+    
     m.optimize()
