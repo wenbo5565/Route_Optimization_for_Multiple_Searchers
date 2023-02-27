@@ -539,7 +539,7 @@ for ending_time in ending_time_grid:
     """
     #
     print("********** optimal solution for V **********")
-    sub_V = sorted(sub_V, key = lambda x: (x[2], x[0]))    
+    sub_V = sorted(sub_V, key = lambda x: (x[0], x[2]))    
     for sub in sub_V:
         if V[sub].X != 0:
             print(sub, V[sub].X)
@@ -551,7 +551,7 @@ for ending_time in ending_time_grid:
             print(sub, O[sub].X)
             
     print("********** optimal solution for Q **********")
-    sub_Q = sorted(sub_Q, key = lambda x: (x[2], x[0]))    
+    sub_Q = sorted(sub_Q, key = lambda x: (x[0], x[2]))    
     for sub in sub_Q:
-        if V[sub].X != 0:
+        if Q[sub].X != 0:
             print(sub, Q[sub].X)
