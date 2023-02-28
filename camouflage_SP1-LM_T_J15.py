@@ -558,3 +558,5 @@ for ending_time in ending_time_grid:
     for sub in sub_Q:
         if Q[sub].X != 0:
             print(sub, Q[sub].X)
+            
+# J = 15
