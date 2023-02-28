@@ -293,8 +293,10 @@ for J in J_total:
     Z = m.addVars(sub_Z, lb = 0, ub = max(n_L.values()), vtype = GRB.INTEGER, name = 'Z')
     # Z_New = m.addVars(sub_WW, lb = 0, ub = J, vtype = GRB.INTEGER, name = 'Z')
     U = m.addVars(Omega_num, lb = 0, name = 'U')
-    O = m.addVars(sub_O, lb = 0, name = 'O')
-    
+    O = m.addVars(sub_O, vtype = GRB.INTEGER, lb = 0, name = 'O')
+    for l in L:
+        for t in T:
+            O[l, t].ub = n_L[l]
 # =============================================================================
 #     test_state = (1, 1)
 #     test_time = [t for t in range(1, 8)]
