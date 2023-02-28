@@ -10,7 +10,7 @@ import os
 import platform
 import time
 import json
-
+#
 """
 Define helper functions
 """
@@ -185,14 +185,14 @@ def is_searcher_occ(C, T, grid_size):
 
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
-ending_time_grid = [10] #, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time = 15
 # num_scenario = 1000
 J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
 
-ending_time = 10
+# ending_time = 10
 for ending_time in ending_time_grid:
     ending_time = ending_time
     # ending_time = 9
