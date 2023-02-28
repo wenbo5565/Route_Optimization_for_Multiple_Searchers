@@ -404,6 +404,9 @@ for ending_time in ending_time_grid:
     V = m.addVars(sub_V, vtype = GRB.BINARY, name = 'V')
     W = m.addVars(sub_W, lb = 0, name = 'W')
     O = m.addVars(sub_O, vtype = GRB.INTEGER, lb = 0, name = 'O')
+    for l in L:
+        for t in T:
+            O[l, t].ub = n_L[l]
     
     """
     Defining objective function
