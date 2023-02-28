@@ -184,14 +184,15 @@ def is_searcher_occ(C, T, grid_size):
     return searcher_occ
 
 grid_size = 9
-ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+# ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10] #, 12, 14, 15, 16, 17, 18, 20]
 # ending_time = 15
 # num_scenario = 1000
 J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
 
-ending_time = 10
+# ending_time = 10
 for ending_time in ending_time_grid:
     ending_time = ending_time
     # ending_time = 9
@@ -401,7 +402,12 @@ for ending_time in ending_time_grid:
     # m.setParam(GRB.Param.MIPGap, 1e-5)
 
     X = m.addVars(sub_X, lb = 0, name = 'X')
-    Z = m.addVars(sub_Z, vtype = GRB.BINARY, lb = 0, name = 'Z')
+    Z = m.addVars(sub_Z, vtype = GRB.INTEGER, lb = 0, name = 'Z')
+    for l in L:
+        for s_expand in S_expand:
+            for t in T:
+                Z[l, s_expand, t].ub = min(n_L[l], n[s, t])
+    
     O = m.addVars(sub_O, vtype = GRB.INTEGER, lb = 0, name = 'O')
     # O = m.addVars(sub_O, lb = 0, name = 'O')    
     for l in L:
@@ -410,12 +416,12 @@ for ending_time in ending_time_grid:
     
     Xi = m.addVar(vtype = GRB.CONTINUOUS, name = 'Xi')
 
-    
     """
     Defining objective function
     """
     m.setObjective(Xi, GRB.MINIMIZE)    
-    
+    # m.setObjective(3, GRB.MINIMIZE)    
+  
     """
     Defining constraints
     """
@@ -479,7 +485,6 @@ for ending_time in ending_time_grid:
     m.addConstrs((sum(X[l, s, s_prime, t] for s in S for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end)) 
                   <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
 
-    
     m.optimize()
 # =============================================================================
 #     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
