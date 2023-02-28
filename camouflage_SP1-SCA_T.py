@@ -192,7 +192,7 @@ J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
 
-# ending_time = 10
+ending_time = 10
 for ending_time in ending_time_grid:
     ending_time = ending_time
     # ending_time = 9
@@ -485,7 +485,7 @@ for ending_time in ending_time_grid:
     m.addConstrs((sum(X[l, s, s_prime, t] for s in S for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end)) 
                   <= sum(O[l, t_prime] for t_prime in T if t_prime <= t and t_prime >= t - tau[l] + 1)  for l in L for t in T), name = 'duration') #2d
 
-    m.optimize()
+    # m.optimize()
 # =============================================================================
 #     m.addConstrs((sum(X[c_prime, c, t - 1] for c_prime in C if is_nearby_cell(c, c_prime)) == sum(X[c, c_prime, t] for c_prime in C if is_nearby_cell(c, c_prime))  for c in C for t in T), name = '14') #2d
 #     
@@ -525,12 +525,10 @@ for ending_time in ending_time_grid:
         # print('f(Z) equals to', f_Z_2)
         # print('f(Z) equals to', f_Z_5)
         
-# =============================================================================
-#         if f_Z < Xi_ub:
-#             Xi_ub = f_Z   
-#         if Xi_ub - Xi_lb <= delta * Xi_lb:
-#             break
-# =============================================================================
+        if f_Z < Xi_ub:
+            Xi_ub = f_Z   
+        if Xi_ub - Xi_lb <= delta * Xi_lb:
+            break
         
         print('Before optimization')
         print('Xi upper', Xi_ub)
