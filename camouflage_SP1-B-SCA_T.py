@@ -809,8 +809,12 @@ for ending_time in ending_time_grid:
 #             #    subs.append(sub)
 #             Z_param[sub] = Z[sub].X
 # =============================================================================
-        for group in group_cnt.keys():
-            ZZZ_param[group] = ZZZ[group].X
+        # for group in group_cnt.keys():
+        for l in L:
+            for t in T:
+                for s in S:
+                    if (s, t) in cat_group.keys():
+                        ZZZ_param[group] = ZZZ[group].X
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
