@@ -814,7 +814,7 @@ for ending_time in ending_time_grid:
             for t in T:
                 for s in S:
                     if (s, t) in cat_group.keys():
-                        ZZZ_param[l, s, t] = ZZZ[l, s, t].X
+                        ZZZ_param[l, (s, t)] = ZZZ[l, (s, t)].X
 # =============================================================================
 #         print('checking if Z_param is updated')
 #         for sub in subs:
