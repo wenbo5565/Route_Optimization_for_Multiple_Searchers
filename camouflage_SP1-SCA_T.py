@@ -568,7 +568,12 @@ for ending_time in ending_time_grid:
         # f(Z^j) + sum (f(Z^j + delta_ct) - f(Z^j))(Z_ct - Z^j_ct) <= Xi
         # cuts.append(f_Z + sum([r[c, t] * (np.exp(-alpha * (Z_param[c, t] + 1)) - np.exp(-alpha * Z_param[c, t])) * s[c, t] * (Z[c, t] - Z_param[c, t]) for c in C for t in T]) <= Xi)
         # m.addConstr(f_Z + sum([r[s_c, t] * (np.exp(-sum(alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1) for l in L)) - np.exp(-sum(alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]) for l in L))) * s[s_c, t] * (Z[s_c, t] - Z_param[s_c, t]) for s_c in S_C for t in T]) <= Xi, name = 'cut_' + str(counter))
-        m.addConstr(f_Z + sum([r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T]) <= Xi, name = 'cut_' + str(counter))
+        
+        # adj_finite_diff = {}
+        """
+        use 1 - s_c[1] to adjust the finite difference: when the searcher is in the camouflage mode, the finite difference will be 0
+        """
+        m.addConstr(f_Z + sum([(1 - s_c[1]) * r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T]) <= Xi, name = 'cut_' + str(counter))
 
         
 # =============================================================================
