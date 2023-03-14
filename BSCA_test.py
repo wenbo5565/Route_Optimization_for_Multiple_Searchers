@@ -186,7 +186,7 @@ def is_searcher_occ(C, T, grid_size):
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
-ending_time = 10
+# ending_time = 10
 # ending_time = 15
 # num_scenario = 1000
 J = 3
@@ -486,13 +486,15 @@ for ending_time in ending_time_grid:
         Z_param[sub] = 0
     
     """ ZZZ is only defined for 'detectable' state """
-    sub_ZZZ = [(l, s, t) for l in L for s in S_expand for t in T if t not in T_no_detect and (s, t) not in part_T_no_detect]
+    sub_ZZZ = [(l, s, t) for l in L for s in S_expand for t in T if t not in T_no_detect and (s, t) not in part_T_no_detect_pairs]
+    sub_ZZZ = sorted(sub_ZZZ, key = lambda x: (x[0], x[2]))
+    
     
     ZZZ = {} # dict to save ZZZ variable
     ZZZ_param = {}
     for sub in sub_ZZZ:
         l, s, t = sub
-        ZZZ[sub] = m.addVar(lb = 0, ub = n_L[l], vtype = GRB.INTEGER)
+        ZZZ[sub] = m.addVar(lb = 0, ub = min(n_L[l], n[s, t]), vtype = GRB.INTEGER)
         ZZZ[sub].Start = 0
         ZZZ_param[sub] = 0
     
@@ -513,7 +515,7 @@ for ending_time in ending_time_grid:
 # =============================================================================
     
     m.addConstrs((sum(X[l, s_prime, s, t - 1] for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
-                  == ZZZ[l, s, t] for l in L for s in S_expand for t in T if t not in T_no_detect), name = 'link_x_z') #2d
+                  == ZZZ[l, s, t] for l in L for s in S_expand for t in T if t not in T_no_detect and (s, t) not in part_T_no_detect_pairs), name = 'link_x_z') #2d
     
     """ variables and constraints with t that has no detection on any cell """
     Z_0 = m.addVars(list(product(L, T_no_detect)), name = 'Z_0', vtype = GRB.CONTINUOUS)
@@ -698,7 +700,7 @@ for ending_time in ending_time_grid:
                 for t in T:
                   adj_finite_diff[l, s_c, t] = (1 - s_c[1]) * r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t]
                   
-        m.addConstr(f_Z + sum([adj_finite_diff[l, s_c, t] * (ZZZ[l, s_c[0], t] - ZZZ_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T if t not in T_no_detect]) <= Xi, name = 'cut_' + str(counter))
+        m.addConstr(f_Z + sum([adj_finite_diff[l, s_c, t] * (ZZZ[l, s_c[0], t] - ZZZ_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T if t not in T_no_detect and (s_c[0], t) not in part_T_no_detect_pairs]) <= Xi, name = 'cut_' + str(counter))
 
         # m.addConstr(f_Z + sum([(1 - s_c[1]) * r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T]) <= Xi, name = 'cut_' + str(counter))
 
