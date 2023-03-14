@@ -186,14 +186,14 @@ def is_searcher_occ(C, T, grid_size):
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
-ending_time_grid = [15]
+ending_time_grid = [10, 12, 14, 15]
 # ending_time = 10
 # ending_time = 15
 # num_scenario = 1000
 J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
-
+# ending_time = 16
 # ending_time = 10
 
 # ending_time = 10
@@ -410,8 +410,10 @@ for ending_time in ending_time_grid:
                 else:
                     part_T_no_detect[t].append((s, t))
     
+    T_d = set(T) - set(T_no_detect)
     """ s_init and s_end for t should be non-detectable """
-    for t in set(T) - set(T_no_detect):
+    for t in T_d:
+        
         part_T_no_detect[t].append((s_init, t))
         part_T_no_detect[t].append((s_end, t))
     
@@ -551,10 +553,12 @@ for ending_time in ending_time_grid:
             # m.getRow(x_J0_link[l, t])
     
     
-    constr49f = {}
-    for l in L:
-        for t in part_detect_T:
-            constr49f[l, t] = m.addConstr((part_Z_0[l, t] + sum(ZZZ[l, s, t] for s in S_expand if (l, s, t) in sub_ZZZ) == n_L[l]), name = 'constr49f_' + str(l) + '_' + str(t))
+# =============================================================================
+#     constr49f = {}
+#     for l in L:
+#         for t in part_detect_T:
+#             constr49f[l, t] = m.addConstr((part_Z_0[l, t] + sum(ZZZ[l, s, t] for s in S_expand if (l, s, t) in sub_ZZZ) == n_L[l]), name = 'constr49f_' + str(l) + '_' + str(t))
+# =============================================================================
     
     # =============================================================================
     #         for l in L:
@@ -653,7 +657,7 @@ for ending_time in ending_time_grid:
     
         # f_Z = sum([r[c, 1] * np.exp(-alpha * Z_param[c, 1]) * s[c, 1] for c in C])
         # f_Z_2 = sum([r[c, ending_time] * np.exp(-alpha * Z_param[c, ending_time]) * s[c, ending_time] for c in C])
-        f_Z = sum([r[s_c, ending_time] * np.exp(-sum(alpha[l, s_c[1]] * Z_param[l, s_c[0], ending_time] for l in L)) * s[s_c, ending_time] for s_c in S_C])
+        f_Z = sum([r[s_c, 5] * np.exp(-sum(alpha[l, s_c[1]] * Z_param[l, s_c[0], 5] for l in L)) * s[s_c, 5] for s_c in S_C])
     
         print('f(Z) equals to', f_Z)
         # print('f(Z) equals to', f_Z_2)
