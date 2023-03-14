@@ -533,14 +533,14 @@ for ending_time in ending_time_grid:
     
     part_detect_T = set(T) - set(T_no_detect)
     for t_loop in part_detect_T:
-        print(t_loop)
+        # print(t_loop)
         constr_link_x_part_Z_0 = m.addConstr((sum(X[l, s_prime, s, t_loop - 1] for s, t in part_T_no_detect[t_loop] for s_prime in S_expand if searcher_reachable[s, t_loop] > 0 and is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end)) == part_Z_0[t_loop]), name = '16_link_part_Z_0_' + str(t_loop)) 
     
 # =============================================================================
 #     constr_Z_t_J = {}
 #     for l in L:
 #         for t in part_detect_T:
-#             constr_Z_t_J[l, t] = m.addConstr((part_Z_0[t] + sum(ZZZ[l, s, t] for l, s, t_inner in sub_ZZZ if t_inner == t) == n_L[l]), name = 'constr_' + str(l) + '_' + str(t))
+#             constr_Z_t_J[l, t] = m.addConstr((part_Z_0[t] + sum(ZZZ[l, s, t] for l, s, t_inner in sub_ZZZ if t_inner == t) >= n_L[l]), name = 'constr_' + str(l) + '_' + str(t))
 # 
 # =============================================================================
 # =============================================================================
@@ -614,8 +614,8 @@ for ending_time in ending_time_grid:
     
     start_time = time.time()
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    # while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
-    while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+    while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+    # while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
         print('=============', counter, '===============')
