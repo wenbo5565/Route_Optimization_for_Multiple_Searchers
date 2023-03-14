@@ -185,7 +185,8 @@ def is_searcher_occ(C, T, grid_size):
 
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
-ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+# ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [15]
 # ending_time = 10
 # ending_time = 15
 # num_scenario = 1000
