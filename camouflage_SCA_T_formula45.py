@@ -184,6 +184,8 @@ def is_searcher_occ(C, T, grid_size):
 
 """ End of helper function definition """
 
+""" Start of the optimization problem  formulation """
+
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
@@ -375,9 +377,6 @@ for ending_time in ending_time_grid:
     
     # 2.4c
     """
-    For this specific constraint, s is the default starting state at t = 0, which is defined by the number of searchers
-    through xx[l, s, 0]. And s_prime (which is where the searchers could be at t = 1) need to be defined in a separate
-    way from the general is_nearby_cell function
     """
     m.addConstrs((sum(X[l, s, s_prime, 0] for s_prime in S_expand if is_forward_cell(s, s_prime, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
                   == x[l, s, 0] for l in L for s in S_expand), name = '24c') #2d
@@ -401,7 +400,7 @@ for ending_time in ending_time_grid:
     
     # 2.5c
     m.addConstrs((sum(Z[l, s, t] for l in L )
-                  <= n[s, t] for t in T for s in S_expand), name = '25b') #2d
+                  <= n[s, t] for t in T for s in S_expand), name = '25c') #2d
     
     # 2.5d
     for l in L:
