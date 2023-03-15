@@ -225,7 +225,7 @@ for ending_time in ending_time_grid:
     on_map_init = (grid_size // 2, 1)
     on_map_end = (grid_size, grid_size // 2)
     S_expand = S + [s_init] + [s_end]
-    tau = {1: ending_time * 0.8, 2: ending_time * 0.6} # operation duration limit for searcher of type l
+    tau = {1: ending_time * 1, 2: ending_time * 1} # operation duration limit for searcher of type l
     
     n = {} # number of seachers per state per time
     for s in S_expand:
