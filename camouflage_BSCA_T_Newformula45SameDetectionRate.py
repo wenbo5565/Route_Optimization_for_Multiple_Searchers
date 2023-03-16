@@ -191,8 +191,10 @@ grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15]
 ending_time_grid = [16, 17, 18, 20]
+# ending_time_grid = [16]
+
 # ending_time = 10
-# ending_time = 15
+# ending_time = 16
 # num_scenario = 1000
 J = 3
 J_2 = int(J * 0.7)
@@ -365,7 +367,9 @@ for ending_time in ending_time_grid:
                 else:
                     V_nd[t].append((s, t))
     
-    
+    for t in T_d:
+        if t not in V_nd.keys():
+            V_nd[t] = []
     
     """ setting parameter for the outer optimization problem """
     delta = 1e-4
