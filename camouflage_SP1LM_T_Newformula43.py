@@ -186,7 +186,7 @@ def is_searcher_occ(C, T, grid_size):
 """
 
 grid_size = 9
-ending_time_grid = [10] # , 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12, 14, 15] # , 12, 14, 15, 16, 17, 18, 20]
 J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
@@ -217,7 +217,7 @@ for ending_time in ending_time_grid:
     on_map_init = (grid_size // 2, 1)
     on_map_end = (grid_size, grid_size // 2)
     S_expand = S + [s_init] + [s_end]
-    tau = {1: ending_time * 0.8, 2: ending_time * 0.6} # operation duration limit for searcher of type l
+    tau = {1: int(ending_time * 0.8), 2: int(ending_time * 0.6)} # operation duration limit for searcher of type l
     
     n = {} # number of seachers per state per time
     for s in S_expand:
@@ -342,7 +342,8 @@ for ending_time in ending_time_grid:
             sub_V = sub_V + list(product([s], [t], JR[s, t]))
     sub_Q = []
     for s_c in S_C:
-        sub_Q = sub_Q + list(product([s_c], [t], T, JR[s_c[0], t]))
+        for t in T:
+            sub_Q = sub_Q + list(product([s_c], [t], JR[s_c[0], t]))
     sub_W = list(product(S_C, T))
     sub_O = list(product(L, T))
     
@@ -425,6 +426,12 @@ for ending_time in ending_time_grid:
     """ Solving
     """
     #
+    print('********** alpha is **********', alpha[0])
+    print('********** T is', ending_time)
+    print('********** Duration is', tau)
+    print('********** J_l is', J_L)
+    print('********** Grid size is', grid_size)
+    
     print("********** optimal solution for V **********")
     sub_V = sorted(sub_V, key = lambda x: (x[0], x[2]))    
     for sub in sub_V:
