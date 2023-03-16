@@ -186,7 +186,7 @@ def is_searcher_occ(C, T, grid_size):
 """
 
 grid_size = 9
-ending_time_grid = [10, 12, 14, 15] # , 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [16, 17, 18, 20] # , 12, 14, 15, 16, 17, 18, 20]
 J = 3
 J_2 = int(J * 0.7)
 J_1 = J - J_2
