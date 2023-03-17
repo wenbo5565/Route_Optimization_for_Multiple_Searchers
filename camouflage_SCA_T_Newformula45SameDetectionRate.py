@@ -189,7 +189,8 @@ def is_searcher_occ(C, T, grid_size):
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
-ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+# ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12] # , 14, 15, 16, 17, 18, 20]
 # ending_time = 10
 # ending_time = 15
 # num_scenario = 1000
@@ -451,7 +452,7 @@ for ending_time in ending_time_grid:
         print('f(Z) equals to', f_Z)    
         if f_Z < Xi_ub:
             Xi_ub = f_Z   
-        if Xi_ub - Xi_lb <= delta * Xi_lb:
+        if abs(Xi_ub - Xi_lb) <= delta * Xi_lb:
             break
         
         print('Before optimization')
@@ -460,7 +461,7 @@ for ending_time in ending_time_grid:
         
 
         ################ step 2 ##############
-        g = (Xi_ub - Xi_lb) / Xi_lb if Xi_lb != 0 else np.inf
+        g = abs(Xi_ub - Xi_lb) / Xi_lb if Xi_lb != 0 else np.inf
         print('counter is', counter)
         print('g is', g)
         
