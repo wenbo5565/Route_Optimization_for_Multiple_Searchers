@@ -365,6 +365,10 @@ for ending_time in ending_time_grid:
                     V_nd[t] = [(s, t)]
                 else:
                     V_nd[t].append((s, t))
+                    
+    for t in T_d:
+        if t not in V_nd.keys():
+            V_nd[t] = []
     
     """ find the most 'valuable' s for each t in T_d """
     s_by_t = {} # key is t; value is list of cell and its q
