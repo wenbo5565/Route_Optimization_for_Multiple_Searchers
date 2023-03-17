@@ -421,7 +421,7 @@ for ending_time in ending_time_grid:
     start_time = time.time()
     
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
+    while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
     # while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
@@ -470,6 +470,8 @@ for ending_time in ending_time_grid:
         else:
             mip_gap = min([0.03, g / 3])
         # mip_gap = 0.1 / 2 ** (counter - 1)
+        
+        mip_gap = 1e-4
         print('==== MIP Gap ====', mip_gap)
         m.setParam("MIPGap", mip_gap)
         
