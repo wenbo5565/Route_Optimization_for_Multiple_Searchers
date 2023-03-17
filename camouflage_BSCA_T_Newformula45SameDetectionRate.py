@@ -197,6 +197,7 @@ ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time = 16
 # num_scenario = 1000
 J = 15
+#
 J_2 = int(J * 0.7)
 J_1 = J - J_2
 
