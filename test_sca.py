@@ -226,7 +226,7 @@ for ending_time in ending_time_grid:
     on_map_init = (grid_size // 2, 1)
     on_map_end = (grid_size, grid_size // 2)
     S_expand = S + [s_init] + [s_end]
-    tau = {1: int(ending_time * 1), 2: int(ending_time * 1)} # operation duration limit for searcher of type l
+    tau = {1: int(ending_time * 0.8), 2: int(ending_time * 0.6)} # operation duration limit for searcher of type l
     
     n = {} # number of seachers per state per time
     for s in S_expand:
@@ -256,7 +256,7 @@ for ending_time in ending_time_grid:
     sub_gamma = list(product(S_C, S_C, T))
     gamma = {}
     stay_prob = 0.5
-    to_cam = 0
+    to_cam = 0.1
     from_cam = 5 / 6
     stay_cam = 1 / 6
     
@@ -338,7 +338,7 @@ for ending_time in ending_time_grid:
 
     model_name = 'sp1_lm'
     m = gp.Model(model_name)
-    m.setParam(GRB.Param.TimeLimit, 15 * 60)
+    m.setParam(GRB.Param.TimeLimit, 60 * 60)
     m.setParam(GRB.Param.Threads, 1)
     m.setParam(GRB.Param.LogFile, model_name)
     
@@ -421,7 +421,7 @@ for ending_time in ending_time_grid:
     start_time = time.time()
     
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
-    while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 900:
+    while abs(Xi_ub - Xi_lb) > delta * Xi_lb and time.time() - start_time <= 12 * 60 * 60:
     # while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
 
         ################ step 1 ################
