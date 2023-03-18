@@ -425,7 +425,7 @@ for ending_time in ending_time_grid:
     
     """ create variable """
     X = m.addVars(sub_X, vtype = GRB.CONTINUOUS, lb = 0, name = 'X')
-    Z = m.addVars(sub_Z, vtype = GRB.INTEGER, lb = 0, name = 'Z')
+    Z = m.addVars(sub_Z, vtype = GRB.CONTINUOUS, lb = 0, name = 'Z')
     """ for those with 'valuable' s, t, modify Z as intger """
     for l, s, t in sub_Z:
         if (s, t) in int_s_by_t[t]:
