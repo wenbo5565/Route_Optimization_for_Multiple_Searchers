@@ -581,7 +581,7 @@ for ending_time in ending_time_grid:
         
         
         test_time = 5
-        f_Z = sum([r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
+        f_Z = sum([q[s_c, test_time] * searcher_reachable[s_c[0], test_time] * r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
         # f_Z_reduced = sum([r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * adj_Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
         
 # =============================================================================
