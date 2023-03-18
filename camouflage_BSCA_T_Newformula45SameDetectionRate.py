@@ -168,7 +168,7 @@ def is_searcher_occ(C, T, grid_size):
         for c in C:
             # when t = 1, searcher can only occupy (1, 1), (1, 2) and (2, 1) because searchers are at (1, 1) at time 0
             if t == 1: 
-                nearby_cell = return_nearby_cell((1, 1), grid_size)
+                nearby_cell = return_nearby_cell((4, 1), grid_size)
                 for each in nearby_cell:
                     searcher_occ[each, 1] = 1
             # return searcher_occ
@@ -188,7 +188,7 @@ def is_searcher_occ(C, T, grid_size):
 
 grid_size = 9
 # ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
-ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20] # , 15] # , 12, 14]
 # ending_time_grid = [10, 12, 14, 15]
 # ending_time_grid = [16, 17, 18, 20]
 # ending_time_grid = [16]
@@ -196,12 +196,13 @@ ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time = 10
 # ending_time = 16
 # num_scenario = 1000
-J = 15
+J = 3
 #
 J_2 = int(J * 0.7)
 J_1 = J - J_2
 
 # ending_time = 10
+# ending_time = 14
 for ending_time in ending_time_grid:
     ending_time = ending_time
     # ending_time = 9
@@ -499,9 +500,56 @@ for ending_time in ending_time_grid:
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
     while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
     # while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
-
+        
+        """ for t in T_nd, print all states with non-zero searchers """
+        for t in T_nd:
+            for s in S_expand:
+                for l in L:
+                    if Z_recov_param[l, s, t] != 0:
+                        print(l, s, t, Z_recov_param[l, s, t])
+                        # print('q[(s, 0), t] is', q[(s, 0), t], 'q[(s, 1), t] is', q[(s, 1), t])
+                        # print('searcher reachable', searcher_reachable[s, t])
+                        
+        """ for t in T_d but in V_nd[t], print all states with non-zero searchers """
+        for t in T_d:
+            for s in S_expand:
+                if (s, t) in V_nd[t]:
+                    for l in L:
+                        if Z_recov_param[l, s, t] != 0:
+                            print(l, s, t, Z_recov_param[l, s, t])
+        
         ################ step 1 ################
         print('=============', counter, '===============')
+        
+        adj_Z_recov_param = Z_recov_param.copy()
+        for l, s_temp, t in sub_recov_Z:
+            if t in T_nd:
+                adj_Z_recov_param[l, s_temp, t] = 0
+            elif (s, t) in V_nd[t]:
+                adj_Z_recov_param[l, s_temp, t] = 0
+                
+
+                
+# =============================================================================
+#         r_adj = {}
+#         for t in T:
+#             for s_c in S_C:
+#                 if t == 1:
+#                     r_adj[s_c, t] = p[s_c]
+#                 else:
+#                     r_adj[s_c, t] = sum([r_adj[s_c_prime, t - 1] * np.exp(-sum(alpha[l, s_c[1]] * adj_Z_recov_param[l, s_c_prime[0], t - 1] for l in L)) * gamma[s_c_prime, s_c, t - 1] for s_c_prime in S_C if is_backward_state_with_cam(s_c_prime, s_c)])
+#                     # r[s_c, t] = sum([r[s_c_prime, t - 1] * np.exp(-sum(alpha[l, s_c[1]] * Z_param[l, s_c_prime[0], t - 1] for l in L)) * gamma[s_c_prime, s_c, t - 1] for s_c_prime in S_C])
+#         
+#         s_adj = {}
+#         for t in T[::-1]:
+#             for s_c in S_C:
+#                 if t == ending_time:
+#                     s_adj[s_c, t] = 1
+#                 else:
+#                     s_adj[s_c, t] = sum([s_adj[s_c_prime, t + 1] * np.exp(-sum(alpha[l, s_c[1]] * adj_Z_recov_param[l, s_c_prime[0], t + 1] for l in L)) * gamma[s_c, s_c_prime, t] for s_c_prime in S_C if is_backward_state_with_cam(s_c, s_c_prime)]) # if s_c_prime is s_c's forward
+#                     # s[s_c, t] = sum([s[s_c_prime, t + 1] * np.exp(-sum(alpha[l, s_c[1]] * Z_param[l, s_c_prime[0], t + 1] for l in L)) * gamma[s_c, s_c_prime, t] for s_c_prime in S_C]) # if s_c_prime is s_c's forward
+# 
+# =============================================================================
         
         r = {}
         for t in T:
@@ -523,7 +571,30 @@ for ending_time in ending_time_grid:
 
         # f_Z = sum([r[c, 1] * np.exp(-alpha * Z_param[c, 1]) * s[c, 1] for c in C])
         # f_Z_2 = sum([r[c, ending_time] * np.exp(-alpha * Z_param[c, ending_time]) * s[c, ending_time] for c in C])
-        f_Z = sum([r[s_c, 5] * np.exp(-sum(alpha[l, s_c[1]] * Z_recov_param[l, s_c[0], 5] for l in L)) * s[s_c, 5] for s_c in S_C])
+        
+        
+        
+        
+        test_time = 5
+        f_Z = sum([r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
+        # f_Z_reduced = sum([r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * adj_Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
+        
+        for l, s_temp, t in sub_recov_Z:
+            if adj_Z_recov_param[l, s_temp, t] != Z_recov_param[l, s_temp, t]:
+                print('stop', l, s_temp, t)
+                print('adj', adj_Z_recov_param[l, s_temp, t])
+                print('org', Z_recov_param[l, s_temp, t])
+                if s_temp != s_init and s_temp != s_end:
+                    print('r, s is', r[(s_temp, 0), t], s[(s_temp, 0), t])
+                # print('r, s is', r_adj[(s_temp, 0), t], s_adj[(s_temp, 0), t])
+        
+# =============================================================================
+#         if f_Z_reduced != f_Z:
+#             print('f_Z_reduced', f_Z_reduced)
+#             print('f_Z', f_Z)
+#             break
+# =============================================================================
+
 
         print('f(Z) equals to', f_Z)    
         if f_Z < Xi_ub:
@@ -553,7 +624,10 @@ for ending_time in ending_time_grid:
         use 1 - s_c[1] to adjust the finite difference: when the searcher is in the camouflage mode, the finite difference will be 0
         """
         # m.addConstr(f_Z + sum([(1 - s_c[1]) * r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T]) <= Xi, name = 'cut_' + str(counter))
-        m.addConstr(f_Z + sum([r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T_d if (s_c[0], t) not in V_nd[t]]) <= Xi, name = 'cut_' + str(counter))
+        # m.addConstr(f_Z + sum([searcher_reachable[s_c[0], t] * r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T_d if (s_c[0], t) not in V_nd[t]]) <= Xi, name = 'cut_' + str(counter))
+        # m.addConstr(f_Z + sum([r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T_d if (s_c[0], t) not in V_nd[t]]) <= Xi, name = 'cut_' + str(counter))
+        m.addConstr(f_Z + sum([r[s_c, t] * (np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t] + 1)) - np.exp(-alpha[l, s_c[1]] * (Z_param[l, s_c[0], t]))) * s[s_c, t] * (Z[l, s_c[0], t] - Z_param[l, s_c[0], t]) for l in L for s_c in S_C for t in T_d if (s_c[0], t) not in V_nd[t] and s_c[1] == 0]) <= Xi, name = 'cut_' + str(counter))
+
         
         """ Solving
         """
@@ -580,7 +654,7 @@ for ending_time in ending_time_grid:
         for sub in sub_recov_Z: # for the grouping algorithm, we need to recalculate Z)
             l, s, t = sub
             Z_recov_param[l, s, t] = sum(X[l, s_prime, s, t - 1].X for s_prime in S_expand if is_backward_cell(s_prime, s, starting_c = s_init, ending_c = s_end, on_map_start = on_map_init, on_map_end = on_map_end))
-   
+            
         print('After optimization')
         print('Xi upper', Xi_ub)
         print('Xi lower', Xi_lb)
@@ -607,6 +681,12 @@ for ending_time in ending_time_grid:
     for sub in sub_X:
         if X[sub].X != 0:
             print(sub, X[sub].X)
+            
+    print('********* optimal solution for O ***********')
+    sub_O = sorted(sub_O, key = lambda x: (x[0], x[1]))    
+    for sub in sub_O:
+        if O[sub].X != 0:
+            print(sub, O[sub].X)
 
     
 
