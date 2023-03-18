@@ -471,7 +471,7 @@ for ending_time in ending_time_grid:
             mip_gap = min([0.03, g / 3])
         # mip_gap = 0.1 / 2 ** (counter - 1)
         
-        mip_gap = 1e-4
+        mip_gap = 1e-5
         print('==== MIP Gap ====', mip_gap)
         m.setParam("MIPGap", mip_gap)
         
