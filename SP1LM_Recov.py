@@ -234,7 +234,7 @@ for ending_time in ending_time_grid:
     """
     model_name = 'sp1_lm'
     m = gp.Model(model_name)
-    m.setParam(GRB.Param.TimeLimit, 100)
+    m.setParam(GRB.Param.TimeLimit, 900)
     m.setParam(GRB.Param.Threads, 1)
     m.setParam(GRB.Param.LogFile, model_name)
     # m.setParam(GRB.Param.MIPGap, 1e-5)
