@@ -187,17 +187,17 @@ def is_searcher_occ(C, T, grid_size):
 """ Start of the optimization problem  formulation """
 
 grid_size = 9
-# ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15] #, 16, 17, 18, 20] # , 15] # , 12, 14]
 # ending_time_grid = [10, 12, 14, 15]
 # , 16, 17, 18, 20]
-ending_time_grid = [16, 17, 18, 20]
+# ending_time_grid = [16, 17, 18, 20]
 # ending_time_grid = [16]
 
 # ending_time = 10
 # ending_time = 16
 # num_scenario = 1000
-J = 3
+J = 15
 #
 J_2 = int(J * 0.7)
 J_1 = J - J_2
