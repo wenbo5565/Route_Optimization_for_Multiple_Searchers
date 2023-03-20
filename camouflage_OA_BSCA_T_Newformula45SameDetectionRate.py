@@ -732,7 +732,9 @@ for ending_time in ending_time_grid:
     for sub in sub_X:
         if X[sub].X != 0:
             print(sub, X[sub].X)
+    print('********* best integer ub is ****************', best_integer_ub )
             
+    
     print('********* optimal solution for O ***********')
     sub_O = sorted(sub_O, key = lambda x: (x[0], x[1]))    
     for sub in sub_O:
@@ -742,7 +744,7 @@ for ending_time in ending_time_grid:
     is_best_ub_frac = False
     best_ub_sol = []
     
-    for l, s, t in sub_recov_Z:
+    for l, s, t in sub_Z:
         if best_ub_Z[l, s, t].X != 0:
             best_ub_sol.append((l, s, t, round(best_ub_Z[l, s, t].X, 2)))
             
