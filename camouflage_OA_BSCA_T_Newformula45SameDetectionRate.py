@@ -187,7 +187,7 @@ def is_searcher_occ(C, T, grid_size):
 """ Start of the optimization problem  formulation """
 
 grid_size = 9
-ending_time_grid = [10, 12, 14, 15, 16, 17, 18, 20]
+ending_time_grid = [10, 12, 14] # , 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15] #, 16, 17, 18, 20] # , 15] # , 12, 14]
 # ending_time_grid = [10, 12, 14, 15]
 # , 16, 17, 18, 20]
@@ -524,6 +524,7 @@ for ending_time in ending_time_grid:
         Z[l, s, t].ub = min(J_L[l], n[s, t])
     
     start_time = time.time()
+    best_integer_ub = 1
     
     # while Xi_ub - Xi_lb > delta * Xi_lb and counter <= 100:
     while Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
@@ -547,14 +548,16 @@ for ending_time in ending_time_grid:
                             print(l, s, t, Z_recov_param[l, s, t])
         
         ################ step 1 ################
-        print('=============', counter, '===============')
-        
-        adj_Z_recov_param = Z_recov_param.copy()
-        for l, s_temp, t in sub_recov_Z:
-            if t in T_nd:
-                adj_Z_recov_param[l, s_temp, t] = 0
-            elif (s, t) in V_nd[t]:
-                adj_Z_recov_param[l, s_temp, t] = 0
+# =============================================================================
+#         print('=============', counter, '===============')
+#         
+#         adj_Z_recov_param = Z_recov_param.copy()
+#         for l, s_temp, t in sub_recov_Z:
+#             if t in T_nd:
+#                 adj_Z_recov_param[l, s_temp, t] = 0
+#             elif (s, t) in V_nd[t]:
+#                 adj_Z_recov_param[l, s_temp, t] = 0
+# =============================================================================
                 
 
                 
@@ -622,13 +625,25 @@ for ending_time in ending_time_grid:
 #             print('f_Z', f_Z)
 #             break
 # =============================================================================
-
+            
 
         print('f(Z) equals to', f_Z)    
         if f_Z < Xi_ub:
             Xi_ub = f_Z   
-            best_ub_Z = Z_recov_param.copy()
-            best_ub_X = X.copy()
+            best_ub_Z = Z.copy()
+            """ track best integer ub """
+            if counter > 1:
+                nonzero_sub = [sub for sub in sub_Z if Z[sub].X != 0]
+                int_sol = True
+                for sub in nonzero_sub:
+                    if int(Z[sub].X) != Z[sub].X:
+                        int_sol = False
+                        break
+                if int_sol:
+                    best_integer_ub = Xi_ub
+
+            # best_ub_Z = Z_recov_param.copy()
+            # best_ub_X = X.copy()
         if Xi_ub - Xi_lb <= delta * Xi_lb:
             break
         
@@ -722,22 +737,25 @@ for ending_time in ending_time_grid:
     best_ub_sol = []
     
     for l, s, t in sub_recov_Z:
-        if best_ub_Z[l, s, t] != 0:
-            best_ub_sol.append((l, s, t, round(best_ub_Z[l, s, t], 2)))
+        if best_ub_Z[l, s, t].X != 0:
+            best_ub_sol.append((l, s, t, round(best_ub_Z[l, s, t].X, 2)))
+            
     best_ub_sol = sorted(best_ub_sol, key = lambda x: (x[0], x[2]))
     for sol in best_ub_sol:
         if int(sol[3]) != sol[3]:
              is_best_ub_frac = True
              break   
          
-    best_ub_sol_X = []
-    for sub in sub_X:
-        if best_ub_X[sub].X != 0:
-            best_ub_sol_X.append((sub, round(best_ub_X[sub].X, 2)))
+# =============================================================================
+#     best_ub_sol_X = []
+#     for sub in sub_X:
+#         if best_ub_X[sub].X != 0:
+#             best_ub_sol_X.append((sub, round(best_ub_X[sub].X, 2)))
+# =============================================================================
     
     time_log[ending_time] = {'gap':gap, 'time':running_time, 'ub':Xi_ub, 'lb':Xi_lb,
                    'largest_num': largest_num, 'best_ub_sol_Z': best_ub_sol,
-                   'best_ub_sol_X': best_ub_sol_X,
+                   # 'best_ub_sol_X': best_ub_sol_X,
                    'is_best_ub_frac': is_best_ub_frac}
     
 print(time_log)
