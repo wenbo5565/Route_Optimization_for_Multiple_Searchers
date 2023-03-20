@@ -187,7 +187,7 @@ def is_searcher_occ(C, T, grid_size):
 """ Start of the optimization problem  formulation """
 
 grid_size = 9
-ending_time_grid = [10, 12, 14] # , 15, 16, 17, 18, 20]
+ending_time_grid = [14] # , 15, 16, 17, 18, 20]
 # ending_time_grid = [10, 12, 14, 15] #, 16, 17, 18, 20] # , 15] # , 12, 14]
 # ending_time_grid = [10, 12, 14, 15]
 # , 16, 17, 18, 20]
@@ -531,21 +531,25 @@ for ending_time in ending_time_grid:
     # while counter <= 5 and Xi_ub - Xi_lb > delta * Xi_lb and time.time() - start_time <= 900:
         
         """ for t in T_nd, print all states with non-zero searchers """
-        for t in T_nd:
-            for s in S_expand:
-                for l in L:
-                    if Z_recov_param[l, s, t] != 0:
-                        print(l, s, t, Z_recov_param[l, s, t])
-                        # print('q[(s, 0), t] is', q[(s, 0), t], 'q[(s, 1), t] is', q[(s, 1), t])
-                        # print('searcher reachable', searcher_reachable[s, t])
-                        
+# =============================================================================
+#         for t in T_nd:
+#             for s in S_expand:
+#                 for l in L:
+#                     if Z_recov_param[l, s, t] != 0:
+#                         print(l, s, t, Z_recov_param[l, s, t])
+#                         # print('q[(s, 0), t] is', q[(s, 0), t], 'q[(s, 1), t] is', q[(s, 1), t])
+#                         # print('searcher reachable', searcher_reachable[s, t])
+#                         
+# =============================================================================
         """ for t in T_d but in V_nd[t], print all states with non-zero searchers """
-        for t in T_d:
-            for s in S_expand:
-                if (s, t) in V_nd[t]:
-                    for l in L:
-                        if Z_recov_param[l, s, t] != 0:
-                            print(l, s, t, Z_recov_param[l, s, t])
+# =============================================================================
+#         for t in T_d:
+#             for s in S_expand:
+#                 if (s, t) in V_nd[t]:
+#                     for l in L:
+#                         if Z_recov_param[l, s, t] != 0:
+#                             print(l, s, t, Z_recov_param[l, s, t])
+# =============================================================================
         
         ################ step 1 ################
 # =============================================================================
@@ -610,13 +614,15 @@ for ending_time in ending_time_grid:
         f_Z = sum([r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
         # f_Z_reduced = sum([r[s_c, test_time] * np.exp(-sum(alpha[l, s_c[1]] * adj_Z_recov_param[l, s_c[0], test_time] for l in L)) * s[s_c, test_time] for s_c in S_C])
         
-        for l, s_temp, t in sub_recov_Z:
-            if adj_Z_recov_param[l, s_temp, t] != Z_recov_param[l, s_temp, t]:
-                print('stop', l, s_temp, t)
-                print('adj', adj_Z_recov_param[l, s_temp, t])
-                print('org', Z_recov_param[l, s_temp, t])
-                if s_temp != s_init and s_temp != s_end:
-                    print('r, s is', r[(s_temp, 0), t], s[(s_temp, 0), t])
+# =============================================================================
+#         for l, s_temp, t in sub_recov_Z:
+#             if adj_Z_recov_param[l, s_temp, t] != Z_recov_param[l, s_temp, t]:
+#                 print('stop', l, s_temp, t)
+#                 print('adj', adj_Z_recov_param[l, s_temp, t])
+#                 print('org', Z_recov_param[l, s_temp, t])
+#                 if s_temp != s_init and s_temp != s_end:
+#                     print('r, s is', r[(s_temp, 0), t], s[(s_temp, 0), t])
+# =============================================================================
                 # print('r, s is', r_adj[(s_temp, 0), t], s_adj[(s_temp, 0), t])
         
 # =============================================================================
