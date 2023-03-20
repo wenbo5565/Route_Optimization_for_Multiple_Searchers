@@ -694,7 +694,7 @@ for ending_time in ending_time_grid:
             if X[sub].X != 0:
                 nonzero_X[sub] = X[sub].X
         
-        log_iter = {'sub_problem_obj_val': m.objVal, 'optimal X': nonzero_X}
+        log_iter[counter] = {'sub_problem_obj_val': m.objVal, 'optimal X': nonzero_X}
         
         print('Pi result after optimization')
         print('Xi iter upper', Xi_iter_ub)
