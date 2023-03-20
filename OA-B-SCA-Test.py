@@ -696,6 +696,7 @@ for ending_time in ending_time_grid:
         
         log_iter[counter] = {'sub_problem_poolObjBound': m.poolObjBound, 
                              'sub_problem_obj': m.objVal, 
+                             'f_z_bf_opt': f_Z,
                              'optimal X': nonzero_X}
         
         print('Pi result after optimization')
