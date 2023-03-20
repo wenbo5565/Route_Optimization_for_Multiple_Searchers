@@ -692,7 +692,7 @@ for ending_time in ending_time_grid:
         nonzero_X = {}
         for sub in sub_X:
             if X[sub].X != 0:
-                nonzero_X[sub] = X[sub].X
+                nonzero_X[str(sub)] = X[sub].X
         
         log_iter[counter] = {'sub_problem_obj_val': m.objVal, 'optimal X': nonzero_X}
         
@@ -777,6 +777,8 @@ for ending_time in ending_time_grid:
 print(time_log)
 with open('OA_B_SCA_result', 'w') as log_result:
     log_result.write(json.dumps(time_log))  
+
+print(log_iter)
 
 with open('log_by_iter', 'w') as log_result:
     log_result.write(json.dumps(log_iter))  
