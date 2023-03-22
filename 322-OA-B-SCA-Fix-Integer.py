@@ -189,7 +189,7 @@ def is_searcher_occ(C, T, grid_size):
 grid_size = 9
 # ending_time_grid = [16, 17, 18, 20] #, 20] # , 15, 16, 17, 18, 20]
 # ending_time_grid = [16, 17, 18, 20] # , 15] # , 12, 14]
-ending_time_grid = [15]
+ending_time_grid = [20]
 # , 16, 17, 18, 20]
 # ending_time_grid = [16, 17, 18, 20]
 # ending_time_grid = [16]
