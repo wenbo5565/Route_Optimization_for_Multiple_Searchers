@@ -102,7 +102,7 @@ def is_backward_cell(c_0, c_1,
 # ending_time= 7
 J_total = [50, 75, 100]
 # J_total = [8]
-
+#
 
 for J in J_total:
     J_2 = int(J * 0.7)
