@@ -100,7 +100,7 @@ def is_backward_cell(c_0, c_1,
 # ending_time_grid = list(range(7, 16))
 # ending_time_grid = list(range(7, 16))
 # ending_time= 7
-J_total = [100]
+J_total = [125]
 # J_total = [8]
 #
 
